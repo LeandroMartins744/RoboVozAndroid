@@ -69,4 +69,7 @@ dependencies {
     // Add this dependency to your gradle (:App)
     implementation ("androidx.compose.material:material:1.5.4")
     implementation ("androidx.navigation:navigation-compose:2.7.6")
+
+    implementation ("com.squareup.retrofit2:retrofit:2.3.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
 }
