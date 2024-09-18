@@ -26,8 +26,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.data.PlayListModel
+import com.example.myapplication.service.RetrofitInitializer
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.ui.theme.frame.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.Console
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,10 +134,27 @@ fun MainScreen() {
     )
 }
 
+fun LoadList(){
+    var call = RetrofitInitializer().playList().list()
+    call.enqueue(object: Callback<List<PlayListModel>?> {
+        override fun onResponse(call: Call<List<PlayListModel>?>, response: Response<List<PlayListModel>?>) {
+            var teste= response
+            response?.body()?.let {
+                val notes: List<PlayListModel> = it
+            }
+
+        }
+
+        override fun onFailure(call: Call<List<PlayListModel>?>, t: Throwable) {
+        }
+    })
+}
+
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
+            LoadList()
            Home(LocalContext.current)
         }
         composable(NavigationItem.Music.route) {
