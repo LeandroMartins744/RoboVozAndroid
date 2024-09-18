@@ -69,4 +69,7 @@ dependencies {
     // Add this dependency to your gradle (:App)
     implementation ("androidx.compose.material:material:1.5.4")
     implementation ("androidx.navigation:navigation-compose:2.7.6")
+
+   // implementation ("io.insert-koin:koin-android:latest")
+
 }
