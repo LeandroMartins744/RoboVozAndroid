@@ -1,11 +1,9 @@
 package com.example.myapplication.viewModel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.myapplication.data.response.UserResponse
+import com.example.myapplication.model.response.UserResponse
 import com.example.myapplication.viewModel.repositories.UserRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 

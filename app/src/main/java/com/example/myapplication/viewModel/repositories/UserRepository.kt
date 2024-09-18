@@ -1,10 +1,10 @@
 package com.example.myapplication.viewModel.repositories
 
 import android.util.Log
-import com.example.myapplication.data.response.UserResponse
-import com.example.myapplication.service.AuthTokenService
-import com.example.myapplication.service.RetrofitInitializer
-import com.example.myapplication.service.UsersEndpoints
+import com.example.myapplication.model.response.UserResponse
+import com.example.myapplication.client.AuthTokenService
+import com.example.myapplication.client.RetrofitInitializer
+import com.example.myapplication.client.UsersEndpoints
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
