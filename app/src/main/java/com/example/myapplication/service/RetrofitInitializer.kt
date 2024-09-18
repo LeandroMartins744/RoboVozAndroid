@@ -1,19 +1,22 @@
 package com.example.myapplication.service
 
 import com.example.myapplication.data.PlayListModel
+import com.example.myapplication.util.BASE_URL
+import com.example.myapplication.util.PASS_REST
+import com.example.myapplication.util.USER_REST
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
+import okhttp3.OkHttpClient
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitInitializer {
-    var urlGet: String = "https://66cb90124290b1c4f19aa171.mockapi.io/api/"
-    var _urlGet: String = "https://66cb90124290b1c4f19aa171.mockapi.io/api/"
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(_urlGet)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+object RetrofitInitializer {
+    private var INSTANCE: Retrofit? = null
 
-    fun playList(): PlayListService{
-        return retrofit.create(PlayListService::class.java)
+    fun getInstance(): Retrofit = INSTANCE ?: kotlin.run {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 }

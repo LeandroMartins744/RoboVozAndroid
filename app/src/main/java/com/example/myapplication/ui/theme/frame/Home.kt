@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.theme.frame
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
@@ -27,16 +29,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.data.ListModal
+import com.example.myapplication.viewModel.UsersViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun Home(context: Context) {
+fun Home(context: Context, viewModel: UsersViewModel) {
     var courseList: List<ListModal> = ArrayList<ListModal>()
 
+    val users by viewModel.user.observeAsState(null)
+
+    LaunchedEffect(Unit) {
+        viewModel.getUsersViewModel()
+    }
+
+    Column {
+        if (users == null) {
+            // Show loading indicator or placeholder
+            Text(text = "Loading...")
+        } else {
+            // Display the list of credit cards
+            Text(text = "Carregador")
+        }
+    }
+
+/*
     // on below line we are adding data to our list.
     courseList = courseList + ListModal("Dia dos Pais", "Dia dos Pais Promoções",  R.drawable.img)
     courseList = courseList + ListModal("Dia das Mães", "Dia das Mães Promoções", R.drawable.logo_temp)
@@ -214,7 +235,7 @@ fun Home(context: Context) {
                 }
             }
         }
-    }
+    }*/
 }
 
 fun convertMillisToDate(): String {

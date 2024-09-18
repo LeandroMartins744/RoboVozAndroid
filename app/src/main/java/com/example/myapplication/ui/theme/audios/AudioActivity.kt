@@ -58,7 +58,7 @@ fun AudioScreen(context: Context) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
-        topBar = { TopBar() },
+        //topBar = { TopBar() },
         //bottomBar = { BottomNavigationBar(navController) },
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
