@@ -15,13 +15,15 @@ class LocalData(var context: Context) {
     }
 
     fun get(): UserResponse{
-
         val data = sharedPref.getString(DATA_USERS_LOCAL, null)
-        //return Gson().toO
+        return Gson().fromJson(data, UserResponse::class.java)
+    }
+
+    fun clean(){
+        sharedPref.edit().clear().commit()
     }
 
     fun valid(): Boolean {
-
         val data = sharedPref.getString(DATA_USERS_LOCAL, null)
         return data.isNullOrBlank()
     }

@@ -35,10 +35,10 @@ fun Home(context: Context, viewModel: UsersViewModel) {
     var courseList: List<ListModal> = ArrayList<ListModal>()
 
     val users by viewModel.user.observeAsState(null)
-
-    LaunchedEffect(Unit) {
-        viewModel.getUsersViewModel()
-    }
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.getUsersViewModel()
+//    }
 
     Column {
         if (users == null) {

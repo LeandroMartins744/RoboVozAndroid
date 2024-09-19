@@ -1,5 +1,6 @@
 package com.example.myapplication.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
+import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.theme.frame.Account
@@ -41,6 +43,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocalData(this).clean()
+        if(LocalData(this).valid())
+            this.startActivity(Intent(this, LoginActivity::class.java))
+
         setContent {
             JetPackBottomNavigationTheme {
                 Surface(

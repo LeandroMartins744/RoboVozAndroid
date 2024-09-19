@@ -18,3 +18,10 @@ data class UserResponse(
     @SerializedName("active")
     val active: Boolean
 )
+
+data class UserRequest(
+    @SerializedName("email")
+    val email: String,
+    @SerializedName("password")
+    val password: String
+)
