@@ -29,11 +29,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.viewModel.UsersViewModel
 
 
 class LoginForm {
     @Composable
-    fun form(clickListener: (String, String) -> Unit) {
+    fun form(viewModel: UsersViewModel, clickListener: (String, String) -> Unit) {
         var credentials by remember { mutableStateOf(Credentials()) }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -72,12 +73,15 @@ class LoginForm {
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = { clickListener(credentials.login, credentials.pwd) },
-                    enabled = credentials.isNotEmpty(),
+                    onClick = {
+                        clickListener(credentials.login, credentials.pwd)
+                        viewModel.setValue()
+                              },
+                    enabled = (credentials.isNotEmpty() && viewModel.isButton),
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Login")
+                    Text(viewModel.textCampo)
                 }
             }
         }
