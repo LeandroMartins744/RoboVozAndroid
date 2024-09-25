@@ -16,15 +16,12 @@ class LoginActivity : ComponentActivity() {
     private val viewModel: UsersViewModel by viewModels()
     private val loginForm: LoginForm = LoginForm()
 
-    var cont = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent{
             MyLoginApplicationTheme {
                 loginForm.form(viewModel) { p1: String, p2: String ->
-
                     execute(p1, p2)
                 }
             }

@@ -2,6 +2,7 @@ package com.example.myapplication.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -21,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,16 +30,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.util.LocalData
+import com.example.myapplication.view.interfaces.HomeInterface
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.theme.frame.Account
 import com.example.myapplication.view.theme.frame.Audios
-import com.example.myapplication.view.theme.frame.Home
 import com.example.myapplication.view.theme.frame.Playlist
-import com.example.myapplication.viewModel.UsersViewModel
+import com.example.myapplication.viewModel.PlaylistViewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: UsersViewModel by viewModels()
+    private val viewModel: PlaylistViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +67,6 @@ class MainActivity : ComponentActivity() {
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = Color.White
         )
-    }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun TopBarPreview() {
-        TopBar()
     }
 
     @Composable
@@ -104,6 +98,7 @@ class MainActivity : ComponentActivity() {
                     alwaysShowLabel = true,
                     selected = currentRoute == item.route,
                     onClick = {
+                        load(item)
                         navController.navigate(item.route) {
                             navController.graph.startDestinationRoute?.let { route ->
                                 popUpTo(route) {
@@ -119,14 +114,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun BottomNavigationBarPreview() {
-        val navController = rememberNavController()
-        BottomNavigationBar(navController)
-    }
-
-    @Preview
     @Composable
     fun MainScreen() {
         val navController = rememberNavController()
@@ -140,6 +127,7 @@ class MainActivity : ComponentActivity() {
             },
             backgroundColor = colorResource(R.color.purple_500) // Set background color to avoid the white flashing when you switch between screens
         )
+        viewModel.get()
     }
 
 
@@ -147,17 +135,40 @@ class MainActivity : ComponentActivity() {
     fun Navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                Home(LocalContext.current, viewModel)
+                HomeInterface().List(viewModel.loading, viewModel.playListResponse, context = this@MainActivity)
             }
             composable(NavigationItem.Music.route) {
                 Audios(LocalContext.current)
             }
             composable(NavigationItem.Movies.route) {
-                Playlist(LocalContext.current)
+                Playlist().List(viewModel.loading, viewModel.playListResponse, context = this@MainActivity)
             }
             composable(NavigationItem.Profile.route) {
                 Account(LocalContext.current)
             }
+        }
+    }
+
+    private fun loadHome(){
+        viewModel.get()
+    }
+    private fun loadAudio(){
+        //viewModel.get()
+        Log.e("Lit", "==========================   AUDIO  =================")
+    }
+    private fun loadPlay(){
+        viewModel.get()
+    }
+    private fun loadConfig(){
+        Log.e("Lit", "==========================   AUDIO  =================")
+    }
+
+    private fun load(item: NavigationItem){
+        when(item.route){
+            NavigationItem.Home.route -> loadHome()
+            NavigationItem.Movies.route -> loadAudio()
+            NavigationItem.Music.route -> loadPlay()
+            NavigationItem.Profile.route -> loadConfig()
         }
     }
 }

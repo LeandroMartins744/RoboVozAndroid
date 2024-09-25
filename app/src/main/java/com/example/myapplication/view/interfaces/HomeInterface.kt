@@ -1,8 +1,7 @@
-package com.example.myapplication.view.theme.frame
+package com.example.myapplication.view.interfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,17 +28,12 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.ListModal
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.view.interfaces.Alertas
-import com.example.myapplication.view.interfaces.HomeListItem
-import com.example.myapplication.view.interfaces.LoadingPage
-import com.example.myapplication.view.theme.audios.AudioActivity
-import com.example.myapplication.view.theme.audios.PlayListActivity
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.UsersViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Playlist {
+class HomeInterface {
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @SuppressLint("NotConstructor")
@@ -47,12 +41,36 @@ class Playlist {
     fun List(loading: Boolean, movieList: List<PlayListResponse>, context: Context) {
 
         if (loading)
-            LoadingPage("Carregando PlayList")
+            LoadingPage("Carregando Lista")
         else {
             val focusManager = LocalFocusManager.current
             var showDatePickerDialog by remember {
                 mutableStateOf(false)
             }
+            val datePickerState = rememberDatePickerState()
+            var selectedDate by remember {
+                mutableStateOf("")
+            }
+            selectedDate = convertMillisToDate()
+            if (showDatePickerDialog) {
+                DatePickerDialog(
+                    onDismissRequest = { showDatePickerDialog = false },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                datePickerState
+                                    .selectedDateMillis?.let { millis ->
+                                        selectedDate = millis.toBrazilianDateFormat()
+                                    }
+                                showDatePickerDialog = false
+                            }) {
+                            Text(text = "Escolher data")
+                        }
+                    }) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+
 
             Column(
                 modifier = Modifier
@@ -64,7 +82,7 @@ class Playlist {
 
                 Row {
                     Text(
-                        text = "PlayList's",
+                        text = "Agendamentos",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         color = MaterialTheme.colorScheme.primary,
@@ -84,9 +102,23 @@ class Playlist {
                 }
                 Spacer(modifier = Modifier.width(5.dp))
                 Row(modifier = Modifier.fillMaxWidth().padding(0.dp)) {
+                    Text(
+                        text = selectedDate,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Right,
+                        fontSize = 25.sp,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+
                     Button(
                         onClick = {
-                            context.startActivity(Intent(context, PlayListActivity::class.java))
+                            showDatePickerDialog = true
+                            focusManager.clearFocus(force = true)
                         },
                         shape = CircleShape,
                         modifier = Modifier.size(40.dp),
@@ -105,9 +137,8 @@ class Playlist {
                 var selectedIndex by remember { mutableStateOf(-1) }
                 LazyColumn {
                     itemsIndexed(items = movieList) { index, item ->
-                        PlayListItem(item = item, index, selectedIndex, context) { i ->
+                        HomeListItem(item = item, index, selectedIndex, context) { i ->
                             selectedIndex = i
-
                         }
                     }
                 }
@@ -115,5 +146,21 @@ class Playlist {
         }
     }
 
+    fun convertMillisToDate(): String {
+        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        return formatter.format(Date())
+    }
 
+
+    fun Long.toBrazilianDateFormat(
+        pattern: String = "dd/MM/yyyy"
+    ): String {
+        val date = Date(this)
+        val formatter = SimpleDateFormat(
+            pattern, Locale("pt-br")
+        ).apply {
+            timeZone = TimeZone.getTimeZone("GMT")
+        }
+        return formatter.format(date)
+    }
 }
