@@ -1,24 +1,25 @@
-package com.example.myapplication.view.theme.frame
+package com.example.myapplication.view.theme.audios
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -28,32 +29,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.ListModal
+import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.view.interfaces.Alertas
-import com.example.myapplication.view.interfaces.HomeListItem
 import com.example.myapplication.view.interfaces.LoadingPage
-import com.example.myapplication.view.theme.audios.AudioActivity
-import com.example.myapplication.view.theme.audios.PlayListActivity
-import com.example.myapplication.viewModel.PlaylistViewModel
-import com.example.myapplication.viewModel.UsersViewModel
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.myapplication.view.theme.playlist.PlayListActivity
 
-class Playlist {
-
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-    @SuppressLint("NotConstructor")
+class AudioList {
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    fun List(loading: Boolean, movieList: List<PlayListResponse>, context: Context) {
-
+    fun Audios(loading: Boolean, movieList: List<AudioResponse>, context: Context, onClick: (AudioResponse) -> Unit) {
         if (loading)
-            LoadingPage("Carregando PlayList")
+            LoadingPage("Carregando Audios")
         else {
-            val focusManager = LocalFocusManager.current
-            var showDatePickerDialog by remember {
-                mutableStateOf(false)
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -64,7 +51,7 @@ class Playlist {
 
                 Row {
                     Text(
-                        text = "PlayList's",
+                        text = "Audios's",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         color = MaterialTheme.colorScheme.primary,
@@ -84,9 +71,9 @@ class Playlist {
                 }
                 Spacer(modifier = Modifier.width(5.dp))
                 Row(modifier = Modifier.fillMaxWidth().padding(0.dp)) {
-                    Button(
+                    androidx.compose.material3.Button(
                         onClick = {
-                            context.startActivity(Intent(context, PlayListActivity::class.java))
+                            context.startActivity(Intent(context, AudioActivity::class.java))
                         },
                         shape = CircleShape,
                         modifier = Modifier.size(40.dp),
@@ -105,15 +92,18 @@ class Playlist {
                 var selectedIndex by remember { mutableStateOf(-1) }
                 LazyColumn {
                     itemsIndexed(items = movieList) { index, item ->
-                        PlayListItem(item = item, index, selectedIndex, context) { i ->
+                        AudioListItem(
+                            item = item,
+                            index,
+                            selectedIndex,
+                            context
+                        ) { i ->
                             selectedIndex = i
-
+                            onClick(item)
                         }
                     }
                 }
             }
         }
     }
-
-
 }

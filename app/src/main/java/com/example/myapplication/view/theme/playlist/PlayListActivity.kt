@@ -1,6 +1,5 @@
-package com.example.myapplication.view.theme.audios
+package com.example.myapplication.view.theme.playlist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -20,35 +19,42 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
+import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.view.MainActivity
-import com.example.myapplication.view.interfaces.Alertas
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.frame.Utils
 import com.example.myapplication.viewModel.PlaylistViewModel
+import com.google.gson.Gson
 
 class PlayListActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
+    private var obj: PlayListResponse = PlayListResponse()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val informant = intent.getStringExtra("object")
+
+        if(!informant.isNullOrBlank())
+            obj = Gson().fromJson(informant, PlayListResponse::class.java)
+
         setContent {
             JetPackBottomNavigationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PlayListScreen(LocalContext.current) { p1: String, p2: String, p3: String ->
-                       // saveData(p1, p2)
-                        Alertas().AlertDialogSample("titulo", "descri~]ap") { p1 ->
-
-                        }
+                    PlayListScreen(obj) { p1: String, p2: String, p3: String, p4:Boolean ->
+                        if(p4)
+                            deleteItem()
+                        else
+                            saveData(p1, p2)
                     }
                 }
             }
@@ -56,9 +62,17 @@ class PlayListActivity : ComponentActivity() {
     }
 
     private fun saveData(name: String, description: String){
-        viewModel.post(PlayListRequest(name, description))
-        //if(!viewModel.loading)
-            Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
+        if(obj.id == 0)
+            viewModel.post(PlayListRequest(name, description))
+        else
+            viewModel.put(PlayListRequest(obj.id, name, description))
+        Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
+        this.startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    private fun deleteItem(){
+        viewModel.delete(obj.id)
+        Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
         this.startActivity(Intent(this, MainActivity::class.java))
     }
 }
@@ -66,42 +80,44 @@ class PlayListActivity : ComponentActivity() {
 
 
 @Composable
-fun PlayListScreen(context: Context, clickListener: (String, String, String) -> Unit) {
-    var dataPlayList by remember { mutableStateOf(PlayListData()) }
+fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
+    var title by remember { mutableStateOf(obj.name) }
+    var description by remember { mutableStateOf(obj.description) }
 
     Scaffold(
-        //topBar = { TopBar() },
-        //bottomBar = { BottomNavigationBar(navController) },
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
 
                 Column{
                     Utils().getSubTitle("Play List")
                     Text(
-                        text = "Criado em: 08/10/2025 10:35",
+                        text = "Criado em: ${obj.date}",
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.LightGray, textAlign = TextAlign.Right
                     )
 
                     OutlinedTextField(
-                        value = dataPlayList.name,
+                        value = title,
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text(text = "Título") },
-                        onValueChange = { obj -> dataPlayList = dataPlayList.copy(name = obj) },
+                        onValueChange = {
+                            title = it
+                        },
                     )
 
                     OutlinedTextField(
-                        value = dataPlayList.description,
+                        value = description,
                         modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
                         label = { Text(text = "Descrição") },
-                        onValueChange = { obj -> dataPlayList = dataPlayList.copy(description = obj) },
+                        onValueChange = {
+                            description = it }
                     )
                     Button(
                         onClick = {
-                            clickListener(dataPlayList.name, dataPlayList.description, "Image")
+                            clickListener(title, description, "Image", false)
                         },
 
-                        enabled = dataPlayList.isNotEmpty(),
+                        enabled = (title.isNotEmpty() && description.isNotEmpty()),
                         modifier = Modifier
                             .size(180.dp, 60.dp)
                             .padding(10.dp)
@@ -114,15 +130,15 @@ fun PlayListScreen(context: Context, clickListener: (String, String, String) -> 
                             contentDescription = "Favorite",
                             modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
                         )
-                        androidx.compose.material.Text(text = "Criar Novo...")
+                        androidx.compose.material.Text(text = "Salvar...")
                     }
 
                     Button(
                         onClick = {
-                            onClick()
+                            clickListener(title, description, "Image", true)
                         },
 
-                        enabled = dataPlayList.isNotEmpty(),
+                        enabled = obj.id != 0,
                         modifier = Modifier
                             .size(180.dp, 60.dp)
                             .padding(10.dp)
@@ -135,7 +151,7 @@ fun PlayListScreen(context: Context, clickListener: (String, String, String) -> 
                             contentDescription = "Favorite",
                             modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
                         )
-                        androidx.compose.material.Text(text = "Deletar Item...")
+                        androidx.compose.material.Text(text = "Deletar...")
                     }
 
 
@@ -146,11 +162,3 @@ fun PlayListScreen(context: Context, clickListener: (String, String, String) -> 
     )
 }
 
-data class PlayListData(
-    var name: String = "",
-    var description: String = ""
-) {
-    fun isNotEmpty(): Boolean {
-        return name.isNotEmpty() && description.isNotEmpty()
-    }
-}

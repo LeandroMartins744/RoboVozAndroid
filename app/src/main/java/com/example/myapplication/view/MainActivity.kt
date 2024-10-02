@@ -3,6 +3,7 @@ package com.example.myapplication.view
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -33,13 +34,22 @@ import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.interfaces.HomeInterface
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
+import com.example.myapplication.view.theme.audios.AudioActivity
+import com.example.myapplication.view.theme.audios.AudioList
 import com.example.myapplication.view.theme.frame.Account
-import com.example.myapplication.view.theme.frame.Audios
-import com.example.myapplication.view.theme.frame.Playlist
+import com.example.myapplication.view.theme.playlist.PlayListActivity
+import com.example.myapplication.view.theme.playlist.Playlist
+import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
+import okhttp3.internal.concurrent.Task
+
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: PlaylistViewModel by viewModels()
+    private val viewModelPlaylist: PlaylistViewModel by viewModels()
+    private val viewModelAudio: AudioViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +69,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     @Composable
     fun TopBar() {
         TopAppBar(
@@ -73,9 +82,9 @@ class MainActivity : ComponentActivity() {
     fun BottomNavigationBar(navController: NavController) {
         val items = listOf(
             NavigationItem.Home,
-            NavigationItem.Music,
-            NavigationItem.Movies,
-            NavigationItem.Profile
+            NavigationItem.Audios,
+            NavigationItem.Playlist,
+            NavigationItem.Config
         )
         BottomNavigation(
             backgroundColor = MaterialTheme.colorScheme.primary,
@@ -127,7 +136,7 @@ class MainActivity : ComponentActivity() {
             },
             backgroundColor = colorResource(R.color.purple_500) // Set background color to avoid the white flashing when you switch between screens
         )
-        viewModel.get()
+        viewModelPlaylist.get()
     }
 
 
@@ -135,29 +144,36 @@ class MainActivity : ComponentActivity() {
     fun Navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomeInterface().List(viewModel.loading, viewModel.playListResponse, context = this@MainActivity)
+                HomeInterface().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity)
             }
-            composable(NavigationItem.Music.route) {
-                Audios(LocalContext.current)
+            composable(NavigationItem.Audios.route) {
+                AudioList().Audios(viewModelPlaylist.loading, viewModelAudio.itemListResponse, context = this@MainActivity){ p1 ->
+                    val it = Intent(this@MainActivity, AudioActivity::class.java)
+                    it.putExtra("object", Gson().toJson(p1))
+                    this@MainActivity.startActivity(it)
+                }
             }
-            composable(NavigationItem.Movies.route) {
-                Playlist().List(viewModel.loading, viewModel.playListResponse, context = this@MainActivity)
+            composable(NavigationItem.Playlist.route) {
+                Playlist().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
+                    val it = Intent(this@MainActivity, PlayListActivity::class.java)
+                    it.putExtra("object", Gson().toJson(p1))
+                    this@MainActivity.startActivity(it)
+                }
             }
-            composable(NavigationItem.Profile.route) {
+            composable(NavigationItem.Config.route) {
                 Account(LocalContext.current)
             }
         }
     }
 
     private fun loadHome(){
-        viewModel.get()
+        viewModelPlaylist.get()
     }
     private fun loadAudio(){
-        //viewModel.get()
-        Log.e("Lit", "==========================   AUDIO  =================")
+        viewModelPlaylist.get()
     }
     private fun loadPlay(){
-        viewModel.get()
+        viewModelAudio.get()
     }
     private fun loadConfig(){
         Log.e("Lit", "==========================   AUDIO  =================")
@@ -166,9 +182,9 @@ class MainActivity : ComponentActivity() {
     private fun load(item: NavigationItem){
         when(item.route){
             NavigationItem.Home.route -> loadHome()
-            NavigationItem.Movies.route -> loadAudio()
-            NavigationItem.Music.route -> loadPlay()
-            NavigationItem.Profile.route -> loadConfig()
+            NavigationItem.Playlist.route -> loadAudio()
+            NavigationItem.Audios.route -> loadPlay()
+            NavigationItem.Config.route -> loadConfig()
         }
     }
 }

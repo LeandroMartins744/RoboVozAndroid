@@ -1,8 +1,8 @@
-package com.example.myapplication.model.response
+package com.example.myapplication.model.request
 
 import com.google.gson.annotations.SerializedName
 
-data class AudioResponse (
+data class AudioRequest (
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")
@@ -14,12 +14,11 @@ data class AudioResponse (
     @SerializedName("audioFile")
     val audioFile: String,
     @SerializedName("date")
-    var date: String,
+    val date: String,
     @SerializedName("status")
     val status: String,
     @SerializedName("active")
     val active: Boolean
 
 ){
-    constructor(): this(0, "", "", "", "", "", "", false)
 }

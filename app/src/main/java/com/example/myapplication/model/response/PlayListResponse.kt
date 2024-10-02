@@ -8,9 +8,9 @@ data class PlayListResponse (
     @SerializedName("audios")
     val audios: List<AudioResponse>,
     @SerializedName("name")
-    val name: String,
+    var name: String,
     @SerializedName("description")
-    val description: String,
+    var description: String,
     @SerializedName("image")
     val image: String,
     @SerializedName("date")
