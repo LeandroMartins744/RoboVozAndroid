@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.ListModal
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.model.response.SchedulingResponse
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.UsersViewModel
 import java.text.SimpleDateFormat
@@ -38,10 +39,10 @@ class HomeInterface {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @SuppressLint("NotConstructor")
     @Composable
-    fun List(loading: Boolean, movieList: List<PlayListResponse>, context: Context) {
+    fun List(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
 
         if (loading)
-            LoadingPage("Carregando Lista")
+            LoadingPage("Carregando Agendas")
         else {
             val focusManager = LocalFocusManager.current
             var showDatePickerDialog by remember {

@@ -41,6 +41,7 @@ import com.example.myapplication.view.theme.playlist.PlayListActivity
 import com.example.myapplication.view.theme.playlist.Playlist
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
+import com.example.myapplication.viewModel.SchedulingViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
@@ -50,6 +51,7 @@ import okhttp3.internal.concurrent.Task
 class MainActivity : ComponentActivity() {
     private val viewModelPlaylist: PlaylistViewModel by viewModels()
     private val viewModelAudio: AudioViewModel by viewModels()
+    private val viewModelScheduling: SchedulingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,7 +138,7 @@ class MainActivity : ComponentActivity() {
             },
             backgroundColor = colorResource(R.color.purple_500) // Set background color to avoid the white flashing when you switch between screens
         )
-        viewModelPlaylist.get()
+        viewModelScheduling.get()
     }
 
 
@@ -144,7 +146,7 @@ class MainActivity : ComponentActivity() {
     fun Navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomeInterface().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity)
+                HomeInterface().List(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, context = this@MainActivity)
             }
             composable(NavigationItem.Audios.route) {
                 AudioList().Audios(viewModelPlaylist.loading, viewModelAudio.itemListResponse, context = this@MainActivity){ p1 ->
@@ -167,7 +169,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadHome(){
-        viewModelPlaylist.get()
+        viewModelScheduling.get()
     }
     private fun loadAudio(){
         viewModelPlaylist.get()
