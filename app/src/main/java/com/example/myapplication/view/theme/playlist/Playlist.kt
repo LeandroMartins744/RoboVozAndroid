@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.view.interfaces.LoadingPage
+import com.example.myapplication.view.interfaces.loadingPage
 
 
 class Playlist {
@@ -32,7 +32,7 @@ class Playlist {
     fun List(loading: Boolean, movieList: List<PlayListResponse>, context: Context, onClick: (PlayListResponse) -> Unit) {
 
         if (loading)
-            LoadingPage("Carregando PlayList")
+            loadingPage("Carregando PlayList")
         else {
             Column(
                 modifier = Modifier
@@ -47,7 +47,7 @@ class Playlist {
                         text = "PlayList's",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Color(R.color.primary),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(.7f),
                         fontSize = 32.sp

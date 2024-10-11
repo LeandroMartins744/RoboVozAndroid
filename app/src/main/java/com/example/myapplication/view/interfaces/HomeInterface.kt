@@ -2,12 +2,9 @@ package com.example.myapplication.view.interfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,11 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
-import com.example.myapplication.model.ListModal
-import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.model.response.SchedulingResponse
-import com.example.myapplication.viewModel.PlaylistViewModel
-import com.example.myapplication.viewModel.UsersViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,8 +35,9 @@ class HomeInterface {
     fun List(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
 
         if (loading)
-            LoadingPage("Carregando Agendas")
+            loadingPage("Carregando Agendas")
         else {
+
             val focusManager = LocalFocusManager.current
             var showDatePickerDialog by remember {
                 mutableStateOf(false)
@@ -86,7 +80,7 @@ class HomeInterface {
                         text = "Agendamentos",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Color(R.color.primary),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(.7f),
                         fontSize = 32.sp
@@ -107,7 +101,7 @@ class HomeInterface {
                         text = selectedDate,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Color(R.color.primary),
                         textAlign = TextAlign.Right,
                         fontSize = 25.sp,
                         modifier = Modifier

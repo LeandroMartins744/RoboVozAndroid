@@ -2,13 +2,9 @@ package com.example.myapplication.client
 
 import com.example.myapplication.model.request.AudioRequest
 import com.example.myapplication.model.response.AudioResponse
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import okhttp3.ResponseBody
+import retrofit2.http.*
+import java.io.OutputStream
 
 interface AudioEndpoints {
     @GET("audio")
@@ -25,4 +21,8 @@ interface AudioEndpoints {
 
     @DELETE("audio/{id}")
     suspend fun delete(@Header("Authorization") authKey: String, @Path("id") id: Int): Int
+
+    @Streaming
+    @GET("audio/download/{id}")
+    suspend fun download(@Header("Authorization") authKey: String, @Path("id") id: String): ResponseBody
 }

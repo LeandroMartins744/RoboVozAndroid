@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -111,7 +112,7 @@ class LoginForm {
             Icon(
                 Icons.Default.Person,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary
+                tint = Color(R.color.primary)
             )
         }
 
@@ -147,7 +148,7 @@ class LoginForm {
             Icon(
                 Icons.Default.Key,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary
+                tint = Color(R.color.primary)
             )
         }
         val trailingIcon = @Composable {
@@ -155,7 +156,7 @@ class LoginForm {
                 Icon(
                     if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = "",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = Color(R.color.primary)
                 )
             }
         }

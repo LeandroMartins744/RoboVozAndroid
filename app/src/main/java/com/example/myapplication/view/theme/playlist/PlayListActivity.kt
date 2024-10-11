@@ -27,6 +27,7 @@ import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.view.MainActivity
+import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.frame.Utils
 import com.example.myapplication.viewModel.PlaylistViewModel
@@ -41,7 +42,7 @@ class PlayListActivity : ComponentActivity() {
 
         val informant = intent.getStringExtra("object")
 
-        if(!informant.isNullOrBlank())
+        if (!informant.isNullOrBlank())
             obj = Gson().fromJson(informant, PlayListResponse::class.java)
 
         setContent {
@@ -50,6 +51,19 @@ class PlayListActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    page()
+                }
+            }
+        }
+
+    }
+
+    @Composable
+    private fun page(){
+        Scaffold(
+            topBar = { Bars().topBar() },
+            content = { padding ->
+                Box(modifier = Modifier.padding(padding)) {
                     PlayListScreen(obj) { p1: String, p2: String, p3: String, p4:Boolean ->
                         if(p4)
                             deleteItem()
@@ -57,10 +71,10 @@ class PlayListActivity : ComponentActivity() {
                             saveData(p1, p2)
                     }
                 }
-            }
-        }
+            },
+            backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
+        )
     }
-
     private fun saveData(name: String, description: String){
         if(obj.id == 0)
             viewModel.post(PlayListRequest(name, description))
@@ -121,7 +135,7 @@ fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String
                         modifier = Modifier
                             .size(180.dp, 60.dp)
                             .padding(10.dp)
-                            .background(color = MaterialTheme.colorScheme.primary)
+                            .background(color = Color(R.color.primary))
                             .align(alignment = Alignment.End),
                         contentPadding = PaddingValues(1.dp)
                     ) {
@@ -142,7 +156,7 @@ fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String
                         modifier = Modifier
                             .size(180.dp, 60.dp)
                             .padding(10.dp)
-                            .background(color = MaterialTheme.colorScheme.primary)
+                            .background(color = Color(R.color.primary))
                             .align(alignment = Alignment.End),
                         contentPadding = PaddingValues(1.dp)
                     ) {

@@ -90,4 +90,4 @@ fun HomeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, conte
 }
 fun started(obj:Boolean) = if(obj) R.drawable.baseline_schedule_ok_24 else R.drawable.baseline_schedule_24
 fun audiosCount(obj: PlayListResponse?) =  obj?.audios?.count() ?: 0
-fun playLIstName(obj: PlayListResponse?) = obj?.name ?: "Sem Playlist"
+fun playLIstName(obj: PlayListResponse?) = obj?.name ?: "Sem Playlist+"

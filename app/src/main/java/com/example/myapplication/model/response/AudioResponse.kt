@@ -1,5 +1,6 @@
 package com.example.myapplication.model.response
 
+import android.media.MediaPlayer
 import com.google.gson.annotations.SerializedName
 
 data class AudioResponse (
@@ -18,7 +19,7 @@ data class AudioResponse (
     @SerializedName("status")
     val status: String,
     @SerializedName("active")
-    val active: Boolean
+    val active: Boolean,
 
 ){
     constructor(): this(0, "", "", "", "", "", "", false)

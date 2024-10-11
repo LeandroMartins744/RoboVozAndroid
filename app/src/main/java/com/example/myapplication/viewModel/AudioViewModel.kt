@@ -6,25 +6,30 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.example.myapplication.client.*
 import com.example.myapplication.model.request.AudioRequest
-import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.AudioResponse
-import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.LodData
-
+import com.example.myapplication.util.ValidFileLocal
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
 class AudioViewModel() : ViewModel() {
     var loading by mutableStateOf(true)
         private set
     var itemListResponse:List<AudioResponse> by mutableStateOf(listOf())
-    var itemResponse: AudioResponse by mutableStateOf(AudioResponse())
+    private var itemResponse: AudioResponse by mutableStateOf(AudioResponse())
     private val apiService = ApiService.getInstance().create(AudioEndpoints::class.java)
 
+    lateinit var validFileLocal: ValidFileLocal
+
+    fun setFile(valid: ValidFileLocal){
+        validFileLocal = valid
+    }
     fun get() {
         viewModelScope.launch {
             try {
                 val list = apiService.get(AuthTokenService().getAuthToken())
+                list.setAudio()
                 itemListResponse = formatDate(list)
                 loading = false
             }
@@ -38,8 +43,27 @@ class AudioViewModel() : ViewModel() {
         viewModelScope.launch {
             try {
                 val item = apiService.get(AuthTokenService().getAuthToken(), id)
+                loading = false
+
+                validFileLocal.name = item.audioFile
+                if(!validFileLocal.existItem())
+                    downloadFile()
+
                 item.date = DateFormat().getFormat(item.date)
                 itemResponse = item
+            }
+            catch (e: Exception) {
+                LodData.setLog(e)
+            }
+        }
+    }
+
+    private fun downloadFile(){
+        loading = true
+        viewModelScope.launch {
+            try {
+                val item: ResponseBody = apiService.download(AuthTokenService().getAuthToken(), validFileLocal.name)
+                validFileLocal.saveFile(item)
             }
             catch (e: Exception) {
                 LodData.setLog(e)
@@ -93,4 +117,14 @@ class AudioViewModel() : ViewModel() {
         }
         return list
     }
+
+    private fun List<AudioResponse>.setAudio(){
+        this.forEach {
+            validFileLocal.name = it.audioFile
+            if(!validFileLocal.existItem())
+                downloadFile()
+        }
+    }
+
+
 }

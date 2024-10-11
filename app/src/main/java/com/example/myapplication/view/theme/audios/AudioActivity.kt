@@ -89,7 +89,7 @@ fun AudioScreen(context: Context) {
                         modifier = Modifier
                             .size(180.dp, 60.dp)
                             .padding(10.dp)
-                            .background(color = MaterialTheme.colorScheme.primary)
+                            .background(color = Color(R.color.primary))
                             .align(alignment = Alignment.End),
                         contentPadding = PaddingValues(1.dp)
                     ) {

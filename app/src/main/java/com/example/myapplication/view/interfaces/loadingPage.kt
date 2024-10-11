@@ -1,15 +1,14 @@
-package com.example.myapplication.view.theme.frame
+package com.example.myapplication.view.interfaces
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -17,10 +16,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 
-class Utils {
-    @SuppressLint("ResourceAsColor")
-    @Composable
-    fun getSubTitle(title: String) = Row {
+@SuppressLint("ResourceAsColor")
+@Composable
+fun loadingPage(title: String = "Carregando ....") {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.white))
+            .wrapContentSize(Alignment.TopStart)
+            .padding(20.dp)
+    ) {
         Text(
             text = title,
             fontWeight = FontWeight.Bold,
@@ -30,16 +35,5 @@ class Utils {
             modifier = Modifier.fillMaxWidth(.7f),
             fontSize = 32.sp
         )
-        Text(
-            text = "Vox Maestro",
-            fontWeight = FontWeight.Thin,
-            fontStyle = FontStyle.Italic,
-            color = Color.Black,
-            textAlign = TextAlign.Right,
-            modifier = Modifier.padding(0.dp, 15.dp),
-            fontSize = 16.sp
-        )
     }
-
 }
-

@@ -2,20 +2,23 @@ package com.example.myapplication.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,6 +34,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.util.LocalData
+import com.example.myapplication.util.ValidFileLocal
+import com.example.myapplication.view.interfaces.Bars
+import com.example.myapplication.view.interfaces.ButtonNew
 import com.example.myapplication.view.interfaces.HomeInterface
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
@@ -42,10 +48,7 @@ import com.example.myapplication.view.theme.playlist.Playlist
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.SchedulingViewModel
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
-import okhttp3.internal.concurrent.Task
 
 
 class MainActivity : ComponentActivity() {
@@ -65,19 +68,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    mainScreen()
                 }
             }
         }
-    }
-
-    @Composable
-    fun TopBar() {
-        TopAppBar(
-            title = { Image(painter = painterResource(R.drawable.logo), contentDescription = "") },
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            contentColor = Color.White
-        )
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
     }
 
     @Composable
@@ -89,7 +85,7 @@ class MainActivity : ComponentActivity() {
             NavigationItem.Config
         )
         BottomNavigation(
-            backgroundColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = Color(R.color.primary),
             contentColor = Color.White
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -126,34 +122,38 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MainScreen() {
+    fun mainScreen() {
         val navController = rememberNavController()
         Scaffold(
-            topBar = { TopBar() },
+            topBar = { Bars().topBar() },
             bottomBar = { BottomNavigationBar(navController) },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    Navigation(navController = navController)
+                    navigation(navController = navController)
                 }
             },
-            backgroundColor = colorResource(R.color.purple_500) // Set background color to avoid the white flashing when you switch between screens
+            backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
         )
         viewModelScheduling.get()
     }
 
 
     @Composable
-    fun Navigation(navController: NavHostController) {
+    fun navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
                 HomeInterface().List(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, context = this@MainActivity)
+                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "HOOOOOME", Toast.LENGTH_LONG).show() }
             }
             composable(NavigationItem.Audios.route) {
-                AudioList().Audios(viewModelPlaylist.loading, viewModelAudio.itemListResponse, context = this@MainActivity){ p1 ->
+
+                AudioList().audios(viewModelAudio.loading, viewModelAudio.itemListResponse, validFileLocal = ValidFileLocal(this@MainActivity, "")){ p1 ->
                     val it = Intent(this@MainActivity, AudioActivity::class.java)
                     it.putExtra("object", Gson().toJson(p1))
                     this@MainActivity.startActivity(it)
                 }
+
+                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "Tela 22222222222222", Toast.LENGTH_LONG).show() }
             }
             composable(NavigationItem.Playlist.route) {
                 Playlist().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
@@ -161,6 +161,8 @@ class MainActivity : ComponentActivity() {
                     it.putExtra("object", Gson().toJson(p1))
                     this@MainActivity.startActivity(it)
                 }
+
+                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "BLALABLALBABL", Toast.LENGTH_LONG).show() }
             }
             composable(NavigationItem.Config.route) {
                 Account(LocalContext.current)
@@ -168,25 +170,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun loadHome(){
-        viewModelScheduling.get()
-    }
-    private fun loadAudio(){
-        viewModelPlaylist.get()
-    }
-    private fun loadPlay(){
-        viewModelAudio.get()
-    }
-    private fun loadConfig(){
-        Log.e("Lit", "==========================   AUDIO  =================")
-    }
-
     private fun load(item: NavigationItem){
         when(item.route){
-            NavigationItem.Home.route -> loadHome()
-            NavigationItem.Playlist.route -> loadAudio()
-            NavigationItem.Audios.route -> loadPlay()
-            NavigationItem.Config.route -> loadConfig()
+            NavigationItem.Home.route -> viewModelScheduling.get()
+            NavigationItem.Playlist.route -> viewModelPlaylist.get()
+            NavigationItem.Audios.route -> {
+                viewModelAudio.setFile(ValidFileLocal(this@MainActivity, ""))
+                viewModelAudio.get()
+            }
+            //NavigationItem.Audios.route -> viewModelAudio.downloadFile(this@MainActivity.filesDir.absoluteFile.toString()) //.get()
+            NavigationItem.Config.route -> Log.e("Lit", "==========================   AUDIO  =================")
         }
     }
 }
