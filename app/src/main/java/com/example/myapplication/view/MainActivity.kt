@@ -45,15 +45,19 @@ import com.example.myapplication.view.theme.audios.AudioList
 import com.example.myapplication.view.theme.frame.Account
 import com.example.myapplication.view.theme.playlist.PlayListActivity
 import com.example.myapplication.view.theme.playlist.Playlist
+import com.example.myapplication.view.theme.voices.VoicesHome
+
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.SchedulingViewModel
+import com.example.myapplication.viewModel.VoicesViewModel
 import com.google.gson.Gson
 
 
 class MainActivity : ComponentActivity() {
     private val viewModelPlaylist: PlaylistViewModel by viewModels()
     private val viewModelAudio: AudioViewModel by viewModels()
+    private val viewModelVoices: VoicesViewModel by viewModels()
     private val viewModelScheduling: SchedulingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +86,7 @@ class MainActivity : ComponentActivity() {
             NavigationItem.Home,
             NavigationItem.Audios,
             NavigationItem.Playlist,
+            NavigationItem.Voices,
             NavigationItem.Config
         )
         BottomNavigation(
@@ -153,7 +158,9 @@ class MainActivity : ComponentActivity() {
                     this@MainActivity.startActivity(it)
                 }
 
-                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "Tela 22222222222222", Toast.LENGTH_LONG).show() }
+                ButtonNew().actionButton {
+                    this@MainActivity.startActivity(Intent(this@MainActivity, AudioActivity::class.java))
+                }
             }
             composable(NavigationItem.Playlist.route) {
                 Playlist().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
@@ -163,6 +170,13 @@ class MainActivity : ComponentActivity() {
                 }
 
                 ButtonNew().actionButton { Toast.makeText(this@MainActivity, "BLALABLALBABL", Toast.LENGTH_LONG).show() }
+            }
+            composable(NavigationItem.Voices.route) {
+                VoicesHome().List(viewModelVoices.loading, viewModelVoices.voicesResponse, context = this@MainActivity){ p1 ->
+//                    val it = Intent(this@MainActivity, PlayListActivity::class.java)
+//                    it.putExtra("object", Gson().toJson(p1))
+//                    this@MainActivity.startActivity(it)
+                }
             }
             composable(NavigationItem.Config.route) {
                 Account(LocalContext.current)
@@ -179,6 +193,7 @@ class MainActivity : ComponentActivity() {
                 viewModelAudio.get()
             }
             //NavigationItem.Audios.route -> viewModelAudio.downloadFile(this@MainActivity.filesDir.absoluteFile.toString()) //.get()
+            NavigationItem.Voices.route -> viewModelVoices.get()
             NavigationItem.Config.route -> Log.e("Lit", "==========================   AUDIO  =================")
         }
     }

@@ -3,7 +3,6 @@ package com.example.myapplication.view.theme.audios
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,15 +23,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.*
 import com.example.myapplication.R
+import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.frame.Utils
-import java.util.Locale
-import kotlin.math.min
 
 class AudioActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +38,7 @@ class AudioActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AudioScreen(LocalContext.current)
+                    audioScreen(LocalContext.current)
                 }
             }
         }
@@ -54,13 +48,13 @@ class AudioActivity : ComponentActivity() {
 
 
 @Composable
-fun AudioScreen(context: Context) {
+fun audioScreen(context: Context) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
-        //topBar = { TopBar() },
+        topBar = { Bars().topBar() },
         //bottomBar = { BottomNavigationBar(navController) },
-        content = { padding ->
+        content = {
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
 
                 Column{
