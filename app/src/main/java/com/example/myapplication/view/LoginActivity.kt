@@ -28,7 +28,7 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
-    fun execute(login: String, pass: String){
+    private fun execute(login: String, pass: String){
 
         if(viewModel.isButton) {
             viewModel.setIsButton(false)
@@ -45,7 +45,9 @@ class LoginActivity : ComponentActivity() {
                 }
             })
         }
-        else
+        else {
             Toast.makeText(this, "Carregando dados, aguarde ....", Toast.LENGTH_SHORT).show()
+            viewModel.setIsButton(true)
+        }
     }
 }

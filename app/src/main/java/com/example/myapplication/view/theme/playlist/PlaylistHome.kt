@@ -23,10 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.loadingPage
 
 
-class Playlist {
+class PlaylistHome {
     @SuppressLint("NotConstructor")
     @Composable
     fun List(loading: Boolean, movieList: List<PlayListResponse>, context: Context, onClick: (PlayListResponse) -> Unit) {
@@ -62,37 +63,22 @@ class Playlist {
                         fontSize = 16.sp
                     )
                 }
-                Spacer(modifier = Modifier.width(5.dp))
-                Row(modifier = Modifier.fillMaxWidth().padding(0.dp)) {
-                    Button(
-                        onClick = {
-                            context.startActivity(Intent(context, PlayListActivity::class.java))
-                        },
-                        shape = CircleShape,
-                        modifier = Modifier.size(40.dp),
-                        contentPadding = PaddingValues(1.dp)
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_library_music_24),
-                            contentDescription = "Favorite",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
 
-
-                }
-
-                var selectedIndex by remember { mutableStateOf(-1) }
-                LazyColumn {
-                    itemsIndexed(items = movieList) { index, item ->
-                        PlayListItem(
-                            item = item,
-                            index,
-                            selectedIndex,
-                            context
-                        ) { i ->
-                            selectedIndex = i
-                            onClick(item)
+                if (movieList.isEmpty())
+                    NotItemList().listClean()
+                else {
+                    var selectedIndex by remember { mutableStateOf(-1) }
+                    LazyColumn {
+                        itemsIndexed(items = movieList) { index, item ->
+                            PlayListItem(
+                                item = item,
+                                index,
+                                selectedIndex,
+                                context
+                            ) { i ->
+                                selectedIndex = i
+                                onClick(item)
+                            }
                         }
                     }
                 }

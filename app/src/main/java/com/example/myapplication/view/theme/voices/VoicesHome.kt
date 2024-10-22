@@ -2,29 +2,26 @@ package com.example.myapplication.view.theme.voices
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
-import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.model.response.VoicesResponse
+import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.VoicesCloud
+import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.loadingPage
 
 
@@ -65,46 +62,35 @@ class VoicesHome {
                     )
                 }
                 Spacer(modifier = Modifier.width(5.dp))
-                Row(modifier = Modifier.fillMaxWidth().padding(0.dp)) {
-                    Button(
-                        onClick = {
-                            //context.startActivity(Intent(context, PlayListActivity::class.java))
-                        },
-                        shape = CircleShape,
-                        modifier = Modifier.size(40.dp),
-                        contentPadding = PaddingValues(1.dp)
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_library_music_24),
-                            contentDescription = "Favorite",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-
-
-                }
 
                 if(movieList.isNotEmpty()) {
-                    var voicesCloud = VoicesCloud(context, movieList[0].preview_url)
+                    val voicesCloud = VoicesCloud(context, movieList[0].preview_url)
                     var selectedIndex by remember { mutableStateOf(-1) }
-                    LazyColumn {
-                        itemsIndexed(items = movieList) { index, item ->
-                            VoicesListItem(
-                                item = item,
-                                index,
-                                selectedIndex,
-                                context
-                            ) { i, x ->
-                                //selectedIndex = 1//i
-                                //onClick(item)
+                    var default by remember { mutableStateOf("") }
 
-                                voicesCloud.name = i
-                                selectedIndex = x
-                                voicesCloud.getMedia()
-                                voicesCloud.mMedia.start()
-                                voicesCloud.mMedia.setOnCompletionListener {
-                                    selectedIndex = -1
-                                }
+                    default = LocalData(context).getVoice().id
+                    if (movieList.isEmpty())
+                        NotItemList().listClean()
+                    else {
+                        LazyColumn {
+                            itemsIndexed(items = movieList) { index, item ->
+                                voicesListItem(
+                                    item = item,
+                                    index,
+                                    selectedIndex,
+                                    default,
+                                    { p1, p2 ->
+                                        voicesCloud.name = p1
+                                        selectedIndex = p2
+                                        voicesCloud.getMedia()
+                                        voicesCloud.mMedia.start()
+                                        voicesCloud.mMedia.setOnCompletionListener {
+                                            selectedIndex = -1
+                                        }
+                                    }, { p1 ->
+                                        LocalData(context).setVoice(p1)
+                                        default = p1.id
+                                    })
                             }
                         }
                     }

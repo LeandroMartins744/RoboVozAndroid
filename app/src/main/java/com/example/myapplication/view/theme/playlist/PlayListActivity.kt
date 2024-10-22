@@ -1,5 +1,6 @@
 package com.example.myapplication.view.theme.playlist
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
@@ -26,15 +29,19 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
+import com.example.myapplication.view.theme.audios.audioListItem
 import com.example.myapplication.view.theme.frame.Utils
+import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
 class PlayListActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
+    private val viewModelAudios: AudioViewModel by viewModels()
     private var obj: PlayListResponse = PlayListResponse()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +62,6 @@ class PlayListActivity : ComponentActivity() {
                 }
             }
         }
-
     }
 
     @Composable
@@ -64,12 +70,15 @@ class PlayListActivity : ComponentActivity() {
             topBar = { Bars().topBar() },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    PlayListScreen(obj) { p1: String, p2: String, p3: String, p4:Boolean ->
+                    playListScreen(obj) { p1: String, p2: String, p3: String, p4:Boolean ->
                         if(p4)
                             deleteItem()
                         else
                             saveData(p1, p2)
                     }
+
+                    viewModelAudios.setFile(ValidFileLocal(this@PlayListActivity, ""))
+                    listAudios(viewModelAudios, ValidFileLocal(context = this@PlayListActivity, ""))
                 }
             },
             backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
@@ -93,16 +102,16 @@ class PlayListActivity : ComponentActivity() {
 
 
 
+@SuppressLint("ResourceAsColor")
 @Composable
-fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
+fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
     var title by remember { mutableStateOf(obj.name) }
     var description by remember { mutableStateOf(obj.description) }
 
     Scaffold(
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
-
-                Column{
+                Column {
                     Utils().getSubTitle("Play List")
                     Text(
                         text = "Criado em: ${obj.date}",
@@ -121,54 +130,56 @@ fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String
 
                     OutlinedTextField(
                         value = description,
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp),
                         label = { Text(text = "Descrição") },
                         onValueChange = {
-                            description = it }
+                            description = it
+                        }
                     )
-                    Button(
-                        onClick = {
-                            clickListener(title, description, "Image", false)
-                        },
 
-                        enabled = (title.isNotEmpty() && description.isNotEmpty()),
-                        modifier = Modifier
-                            .size(180.dp, 60.dp)
-                            .padding(10.dp)
-                            .background(color = Color(R.color.primary))
-                            .align(alignment = Alignment.End),
-                        contentPadding = PaddingValues(1.dp)
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_library_music_branco),
-                            contentDescription = "Favorite",
-                            modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
-                        )
-                        androidx.compose.material.Text(text = "Salvar...")
+                    Row {
+                        Button(
+                            onClick = {
+                                clickListener(title, description, "Image", false)
+                            },
+
+                            enabled = (title.isNotEmpty() && description.isNotEmpty()),
+                            modifier = Modifier
+                                .size(180.dp, 60.dp)
+                                .padding(10.dp)
+                                .background(color = Color(R.color.primary)),
+                              //  .align(alignment = Alignment.End),
+                            contentPadding = PaddingValues(1.dp)
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_library_music_branco),
+                                contentDescription = "Favorite",
+                                modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
+                            )
+                            androidx.compose.material.Text(text = "Salvar...")
+                        }
+
+                        Button(
+                            onClick = {
+                                clickListener(title, description, "Image", true)
+                            },
+
+                            enabled = obj.id != 0,
+                            modifier = Modifier
+                                .size(180.dp, 60.dp)
+                                .padding(10.dp)
+                                .background(color = Color(R.color.primary)),
+                             //   .align(alignment = Alignment.End),
+                            contentPadding = PaddingValues(1.dp)
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_library_music_branco),
+                                contentDescription = "Favorite",
+                                modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
+                            )
+                            androidx.compose.material.Text(text = "Deletar...")
+                        }
                     }
-
-                    Button(
-                        onClick = {
-                            clickListener(title, description, "Image", true)
-                        },
-
-                        enabled = obj.id != 0,
-                        modifier = Modifier
-                            .size(180.dp, 60.dp)
-                            .padding(10.dp)
-                            .background(color = Color(R.color.primary))
-                            .align(alignment = Alignment.End),
-                        contentPadding = PaddingValues(1.dp)
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_library_music_branco),
-                            contentDescription = "Favorite",
-                            modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
-                        )
-                        androidx.compose.material.Text(text = "Deletar...")
-                    }
-
-
                 }
             }
         },
@@ -176,3 +187,44 @@ fun PlayListScreen(obj: PlayListResponse, clickListener: (String, String, String
     )
 }
 
+@Composable
+fun listAudios(viewModelAudios: AudioViewModel, validFileLocal: ValidFileLocal, ){
+    Box {
+        Spacer(modifier = Modifier.width(5.dp))
+        var selectedIndex: Int by remember { mutableStateOf(-1) }
+
+        viewModelAudios.get()
+
+        if (viewModelAudios.loading) {
+
+        } else {
+            LazyColumn {
+                itemsIndexed(items = viewModelAudios.itemListResponse) { index, item ->
+                    audioListItem(
+                        item = item,
+                        index,
+                        selectedIndex,
+                        validFileLocal,
+                        {
+                            selectedIndex = -1
+                            validFileLocal.getMediaStop()
+                            null
+                        }, { p1, p2 ->
+                            if (selectedIndex == p2) {
+                                validFileLocal.getMediaStop()
+                                selectedIndex = -1
+                            } else {
+                                validFileLocal.name = p1
+                                selectedIndex = p2
+                                validFileLocal.getMedia()
+                                validFileLocal.mMedia?.start()
+                                validFileLocal.mMedia?.setOnCompletionListener {
+                                    selectedIndex = -1
+                                }
+                            }
+                        })
+                }
+            }
+        }
+    }
+}

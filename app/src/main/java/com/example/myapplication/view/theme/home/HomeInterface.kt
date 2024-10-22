@@ -1,7 +1,9 @@
-package com.example.myapplication.view.interfaces
+package com.example.myapplication.view.theme.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,13 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.SchedulingResponse
+import com.example.myapplication.view.interfaces.NotItemList
+import com.example.myapplication.view.interfaces.loadingPage
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeInterface {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-    @SuppressLint("NotConstructor")
+    @SuppressLint("NotConstructor", "ResourceAsColor")
     @Composable
     fun List(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
 
@@ -129,11 +134,15 @@ class HomeInterface {
 
                 }
 
-                var selectedIndex by remember { mutableStateOf(-1) }
-                LazyColumn {
-                    itemsIndexed(items = movieList) { index, item ->
-                        HomeListItem(item = item, index, selectedIndex, context) { i ->
-                            selectedIndex = i
+                if (movieList.isEmpty())
+                    NotItemList().listClean()
+                else {
+                    var selectedIndex by remember { mutableStateOf(-1) }
+                    LazyColumn {
+                        itemsIndexed(items = movieList) { index, item ->
+                            HomeListItem(item = item, index, selectedIndex, context) { i ->
+                                selectedIndex = i
+                            }
                         }
                     }
                 }

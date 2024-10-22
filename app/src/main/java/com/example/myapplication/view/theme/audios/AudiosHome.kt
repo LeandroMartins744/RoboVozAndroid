@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.util.ValidFileLocal
+import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.loadingPage
 
 class AudioList {
@@ -59,36 +60,38 @@ class AudioList {
                     )
                 }
 
-                Spacer(modifier = Modifier.width(5.dp))
-                var selectedIndex: Int by remember { mutableStateOf(-1) }
+                if (movieList.isEmpty())
+                    NotItemList().listClean()
+                else {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    var selectedIndex: Int by remember { mutableStateOf(-1) }
 
-                LazyColumn {
-                    itemsIndexed(items = movieList) { index, item ->
-                        audioListItem(
-                            item = item,
-                            index,
-                            selectedIndex,
-                            validFileLocal,
-                        {
-                            selectedIndex = -1
-                            validFileLocal.getMediaStop()
-                            onClick(item)
-                        },{
-                            p1, p2 ->
-                                if(selectedIndex == p2) {
-                                    validFileLocal.getMediaStop()
+                    LazyColumn {
+                        itemsIndexed(items = movieList) { index, item ->
+                            audioListItem(
+                                item = item,
+                                index,
+                                selectedIndex,
+                                validFileLocal,
+                                {
                                     selectedIndex = -1
-                                }
-                                else {
-                                    validFileLocal.name = p1
-                                    selectedIndex = p2
-                                    validFileLocal.getMedia()
-                                    validFileLocal.mMedia?.start()
-                                    validFileLocal.mMedia?.setOnCompletionListener {
+                                    validFileLocal.getMediaStop()
+                                    onClick(item)
+                                }, { p1, p2 ->
+                                    if (selectedIndex == p2) {
+                                        validFileLocal.getMediaStop()
                                         selectedIndex = -1
+                                    } else {
+                                        validFileLocal.name = p1
+                                        selectedIndex = p2
+                                        validFileLocal.getMedia()
+                                        validFileLocal.mMedia?.start()
+                                        validFileLocal.mMedia?.setOnCompletionListener {
+                                            selectedIndex = -1
+                                        }
                                     }
-                                }
-                        })
+                                })
+                        }
                     }
                 }
             }

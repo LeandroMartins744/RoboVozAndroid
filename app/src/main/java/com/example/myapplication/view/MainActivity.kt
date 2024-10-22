@@ -37,14 +37,14 @@ import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.ButtonNew
-import com.example.myapplication.view.interfaces.HomeInterface
+import com.example.myapplication.view.theme.home.HomeInterface
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.theme.audios.AudioActivity
 import com.example.myapplication.view.theme.audios.AudioList
 import com.example.myapplication.view.theme.frame.Account
 import com.example.myapplication.view.theme.playlist.PlayListActivity
-import com.example.myapplication.view.theme.playlist.Playlist
+import com.example.myapplication.view.theme.playlist.PlaylistHome
 import com.example.myapplication.view.theme.voices.VoicesHome
 
 import com.example.myapplication.viewModel.AudioViewModel
@@ -163,13 +163,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NavigationItem.Playlist.route) {
-                Playlist().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
+                PlaylistHome().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
                     val it = Intent(this@MainActivity, PlayListActivity::class.java)
                     it.putExtra("object", Gson().toJson(p1))
                     this@MainActivity.startActivity(it)
                 }
 
-                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "BLALABLALBABL", Toast.LENGTH_LONG).show() }
+                ButtonNew().actionButton {
+                    this@MainActivity.startActivity(Intent(this@MainActivity, PlayListActivity::class.java))
+                }
             }
             composable(NavigationItem.Voices.route) {
                 VoicesHome().List(viewModelVoices.loading, viewModelVoices.voicesResponse, context = this@MainActivity){ p1 ->

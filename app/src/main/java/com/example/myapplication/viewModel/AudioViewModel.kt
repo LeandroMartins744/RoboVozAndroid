@@ -75,6 +75,7 @@ class AudioViewModel() : ViewModel() {
         loading = true
         viewModelScope.launch {
             try {
+                obj.audio = "Novo teste de audio, agora está funcionando, já esta mais que na hora, foi ?"
                 val item = apiService.post(AuthTokenService().getAuthToken(), obj)
                 item.date = DateFormat().getFormat(item.date)
                 itemResponse = item
