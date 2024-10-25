@@ -90,4 +90,6 @@ dependencies {
     implementation (platform("com.google.firebase:firebase-bom:28.3.0"))
     implementation ("com.google.firebase:firebase-messaging")
     implementation ("com.google.firebase:firebase-analytics")
+
+    implementation("io.coil-kt:coil-compose:2.2.2")
 }
