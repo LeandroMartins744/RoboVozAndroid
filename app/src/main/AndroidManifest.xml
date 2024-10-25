@@ -17,28 +17,28 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/Theme.MyApplication"
+            android:theme="@style/Theme.RoboVoz"
             tools:targetApi="31">
         <activity
                 android:name=".view.LoginActivity"
                 android:exported="true"
                 android:noHistory="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
         <activity
                 android:name=".view.pages.audios.AudioActivity"
                 android:exported="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
         <activity
                 android:name=".view.pages.playlist.PlayListActivity"
                 android:exported="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
 
@@ -46,27 +46,27 @@
                 android:name=".view.pages.playlist.PlayListDetailsActivity"
                 android:exported="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
         <activity
                 android:name=".view.pages.audios.Audio2Activity"
                 android:exported="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
         <activity
                 android:name=".view.MainActivity2"
                 android:exported="true"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
 
         </activity>
         <activity
                 android:name=".view.MainActivity"
                 android:exported="true"
-                android:theme="@style/Theme.MyApplication">
+                android:theme="@style/Theme.RoboVoz">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

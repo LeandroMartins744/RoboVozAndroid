@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "br.com.robovoz"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "br.com.robovoz"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
