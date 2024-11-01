@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class PlaylistViewModel() : ViewModel() {
     var loading by mutableStateOf(true)
         private set
-    var playListResponse:List<PlayListResponse> by mutableStateOf(listOf())
+    var playListResponse: List<PlayListResponse> by mutableStateOf(listOf())
     var playResponse: PlayListResponse by mutableStateOf(PlayListResponse())
     private val apiService = ApiService.getInstance().create(PlaylistEndpoints::class.java)
 

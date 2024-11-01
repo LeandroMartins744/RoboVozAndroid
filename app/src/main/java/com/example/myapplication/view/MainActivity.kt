@@ -37,7 +37,9 @@ import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.ButtonNew
-import com.example.myapplication.view.theme.home.HomeInterface
+import com.example.myapplication.view.pages.home.HomeInsertActivity
+import com.example.myapplication.view.pages.login.LoginActivity
+import com.example.myapplication.view.pages.home.HomePage
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.theme.audios.AudioActivity
@@ -147,8 +149,11 @@ class MainActivity : ComponentActivity() {
     fun navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomeInterface().List(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, context = this@MainActivity)
-                ButtonNew().actionButton { Toast.makeText(this@MainActivity, "HOOOOOME", Toast.LENGTH_LONG).show() }
+                HomePage().listSchedule(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, context = this@MainActivity)
+
+                ButtonNew().actionButton {
+                    this@MainActivity.startActivity(Intent(this@MainActivity, HomeInsertActivity::class.java))
+                }
             }
             composable(NavigationItem.Audios.route) {
 

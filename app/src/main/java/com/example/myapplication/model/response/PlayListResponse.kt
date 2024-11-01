@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PlayListResponse (
     @SerializedName("id")
-    val id: Int,
+    var id: Int,
     @SerializedName("audios")
     val audios: List<AudioResponse>,
     @SerializedName("name")

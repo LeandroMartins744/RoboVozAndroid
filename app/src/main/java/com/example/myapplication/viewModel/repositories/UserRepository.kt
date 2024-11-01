@@ -26,7 +26,12 @@ class UserRepository {
 
                 override fun onFailure(call: Call<UserResponse>, response: Throwable) {
                     Log.d("TAG ERROS", "onResponse response:: $response")
-                    userData.value = null
+
+                    userData.value?.id = 1
+                    userData.value?.codError = 1
+                    userData.value?.isError = true
+                    userData.value?.messageError = "Erro ao carregar dados"
+                    userData.value?.throwable = response
                 }
             })
     }

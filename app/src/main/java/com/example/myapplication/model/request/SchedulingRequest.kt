@@ -3,7 +3,7 @@ package com.example.myapplication.model.request
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-data class SchedulingRequest (
+data class SchedulingRequest(
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")
@@ -15,15 +15,19 @@ data class SchedulingRequest (
     @SerializedName("iduser")
     val idUser: Int,
     @SerializedName("started")
-    val started: Boolean,
+    val started: Boolean = false,
     @SerializedName("dateStarted")
-    val dateStarted: Date,
+    val dateStarted: Date? = null,
     @SerializedName("finish")
-    val finish: Boolean,
+    val finish: Boolean = false,
     @SerializedName("dateFinish")
-    val dateFinish: Date,
+    val dateFinish: Date? = null,
     @SerializedName("sendEvent")
-    val sendEvent: Boolean
+    val sendEvent: Boolean = false
 ){
+    constructor(_name: String, _playlist: PlayListRequest, _date: Date, _idUser: Int) :
+            this(name = _name, id = 0, playlist =  _playlist, date = _date,
+            idUser = 1) {
 
+    }
 }

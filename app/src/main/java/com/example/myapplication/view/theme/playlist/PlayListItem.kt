@@ -18,7 +18,7 @@ import com.example.myapplication.model.response.PlayListResponse
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PlayListItem(item: PlayListResponse, index: Int, selectedIndex: Int, context: Context, onClick: (Int) -> Unit){
+fun PlayListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick: (Int) -> Unit){
     val backgroundColor =
         if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background
 

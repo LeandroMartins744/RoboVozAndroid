@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.home
+package com.example.myapplication.view.pages.home
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -26,32 +26,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.SchedulingResponse
+import com.example.myapplication.util.DateFormat
 import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.loadingPage
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeInterface {
+class HomePage {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @SuppressLint("NotConstructor", "ResourceAsColor")
     @Composable
-    fun List(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
+    fun listSchedule(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
 
         if (loading)
             loadingPage("Carregando Agendas")
         else {
-
             val focusManager = LocalFocusManager.current
             var showDatePickerDialog by remember {
                 mutableStateOf(false)
             }
             val datePickerState = rememberDatePickerState()
-            var selectedDate by remember {
-                mutableStateOf("")
-            }
-            selectedDate = convertMillisToDate()
+            var selectedDate by remember { mutableStateOf("") }
+            selectedDate = DateFormat().getDate()
             if (showDatePickerDialog) {
                 DatePickerDialog(
                     onDismissRequest = { showDatePickerDialog = false },
@@ -60,7 +58,7 @@ class HomeInterface {
                             onClick = {
                                 datePickerState
                                     .selectedDateMillis?.let { millis ->
-                                        selectedDate = millis.toBrazilianDateFormat()
+                                        selectedDate = DateFormat().getDateFormat(millis)
                                     }
                                 showDatePickerDialog = false
                             }) {
@@ -125,7 +123,7 @@ class HomeInterface {
                         contentPadding = PaddingValues(1.dp)
                     ) {
                         Icon(
-                            painterResource(id = R.drawable.baseline_library_music_24),
+                            painterResource(id = R.drawable.baseline_schedule_24),
                             contentDescription = "Favorite",
                             modifier = Modifier.size(20.dp)
                         )
@@ -148,23 +146,5 @@ class HomeInterface {
                 }
             }
         }
-    }
-
-    fun convertMillisToDate(): String {
-        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        return formatter.format(Date())
-    }
-
-
-    fun Long.toBrazilianDateFormat(
-        pattern: String = "dd/MM/yyyy"
-    ): String {
-        val date = Date(this)
-        val formatter = SimpleDateFormat(
-            pattern, Locale("pt-br")
-        ).apply {
-            timeZone = TimeZone.getTimeZone("GMT")
-        }
-        return formatter.format(date)
     }
 }

@@ -73,8 +73,7 @@ class PlaylistHome {
                             PlayListItem(
                                 item = item,
                                 index,
-                                selectedIndex,
-                                context
+                                selectedIndex
                             ) { i ->
                                 selectedIndex = i
                                 onClick(item)

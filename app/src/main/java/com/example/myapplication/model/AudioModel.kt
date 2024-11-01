@@ -8,5 +8,4 @@ data class AudioModel(
     val description: String? = null,
     val image: String? = null,
     val date: Date? = null,
-    val active: Boolean = false
-)
+    val active: Boolean = false): ErrorModel()

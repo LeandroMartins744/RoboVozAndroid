@@ -1,5 +1,6 @@
-package com.example.myapplication.view.interfaces
+package com.example.myapplication.view.pages.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +14,6 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -40,7 +40,7 @@ class LoginForm {
 
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(R.drawable.img),
+                painter = painterResource(R.drawable.background),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
@@ -98,6 +98,7 @@ class LoginForm {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     @Composable
     fun LoginField(
         value: String,

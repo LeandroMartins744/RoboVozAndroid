@@ -29,6 +29,6 @@ class UsersViewModel() : ViewModel() {
     }
 
     fun getUsersViewModel(user: String, pass: String) {
-             repository.getUser(UserRequest(user, pass), userData)
+        repository.getUser(UserRequest(user, pass), userData)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.home
+package com.example.myapplication.view.pages.home
 
 import android.content.Context
 import android.os.Build

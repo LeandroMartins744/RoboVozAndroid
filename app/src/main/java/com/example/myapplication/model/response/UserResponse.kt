@@ -1,10 +1,11 @@
 package com.example.myapplication.model.response
 
+import com.example.myapplication.model.ErrorModel
 import com.google.gson.annotations.SerializedName
 
 data class UserResponse(
     @SerializedName("id")
-    val id: Int,
+    var id: Int,
     @SerializedName("name")
     val name: String,
     @SerializedName("email")
@@ -17,7 +18,7 @@ data class UserResponse(
     val firstAccess: Boolean,
     @SerializedName("active")
     val active: Boolean
-)
+): ErrorModel()
 
 data class UserRequest(
     @SerializedName("email")

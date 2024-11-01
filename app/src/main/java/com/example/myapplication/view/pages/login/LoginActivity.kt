@@ -1,4 +1,4 @@
-package com.example.myapplication.view
+package com.example.myapplication.view.pages.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.myapplication.util.LocalData
-import com.example.myapplication.view.interfaces.LoginForm
+import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.theme.MyLoginApplicationTheme
 import com.example.myapplication.viewModel.UsersViewModel
 
@@ -35,7 +35,9 @@ class LoginActivity : ComponentActivity() {
             viewModel.getUsersViewModel(login, pass)
             viewModel.userData.observe(this, Observer { data ->
                 viewModel.setIsButton(true)
-                if (data.email == null) {
+                if(data.isError)
+                    Toast.makeText(this, data.messageError, Toast.LENGTH_SHORT).show()
+                if (data.email.isNullOrBlank()) {
                     Toast.makeText(this, "Login ou senha inválido!", Toast.LENGTH_SHORT).show()
                     viewModel.setValue()
                 }
