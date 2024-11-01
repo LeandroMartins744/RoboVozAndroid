@@ -1,5 +1,6 @@
 package com.example.myapplication.util
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
@@ -18,10 +19,29 @@ class DateFormat {
         return "${date.day}/${date.month}/${date.year} ${date.hours}:${date.minutes}"
     }
 
-    fun getDate(pattern: String = "dd/MM/yyyy"): String {
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getFormatUS(date: Date): String{
+
+        return SimpleDateFormat("yyyy-MM-dd hh:mm").format(date).replace(" ", "T")
+    }
+
+    fun getDate(pattern: String = "dd/MM/yyyy hh:mm"): String {
         val formatter = SimpleDateFormat(pattern, Locale.getDefault())
         return formatter.format(Date())
+    }
+    fun getDate(date: Date, pattern: String = "dd/MM/yyyy hh:mm"): String {
+        val formatter = SimpleDateFormat(pattern, Locale.US)// .getDefault())
+        return formatter.format(date)
+    }
 
+    fun getDate(day: String, month: String, year: String, hour: String, min: String): Date{
+        val mon = (month.toInt() + 1).toString()
+        return Date("$year/$mon/$day $hour:$min")
+    }
+
+    fun getDate(day: String, month: String, year: String): Date{
+        return Date("$year/$month/$day")
     }
 
     fun getDateFormat(value: Long, pattern: String = "dd/MM/yyyy"): String {
@@ -32,4 +52,29 @@ class DateFormat {
     }
 
     fun getStart(obj: Boolean) = if(obj) "Sim" else "Não"
+
+    fun getDays() = arrayOf(
+        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
+    )
+
+    fun getMonth() = arrayOf(
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    )
+
+    fun getYear() = arrayOf(
+        "2024", "2025", "2026"
+    )
+
+    fun getHour() = arrayOf(
+        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23", "00"
+    )
+
+    fun getMinutos() = arrayOf(
+        "00", "10", "20", "30", "40", "50"
+    )
 }

@@ -33,7 +33,7 @@ fun myField(
     modifier: Modifier = Modifier,
     label: String = "",
     placeholder: String = "",
-    icon: ImageVector = Icons.Default.Person,
+    icon: ImageVector,// = Icons.Default.Person,
     spacer: Dp = 15.dp,
     enable: Boolean = true
 ) {
@@ -67,13 +67,44 @@ fun myField(
 
 @SuppressLint("ResourceAsColor")
 @Composable
+fun myField(
+    value: String,
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String = "",
+    placeholder: String = "",
+    spacer: Dp = 15.dp,
+    enable: Boolean = true
+) {
+    val focusManager = LocalFocusManager.current
+
+    TextField(
+        value = value,
+        onValueChange = onChange,
+        modifier = modifier,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+        ),
+        placeholder = { Text(placeholder) },
+        label = { Text(label) },
+        singleLine = true,
+        enabled = enable,
+        visualTransformation = VisualTransformation.None
+    )
+
+    Spacer(modifier = Modifier.height(spacer))
+}
+
+@SuppressLint("ResourceAsColor")
+@Composable
 fun myFieldNumber(
     value: String,
     onChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "",
     placeholder: String = "",
-    icon: ImageVector = Icons.Default.Person,
+    icon: ImageVector,
     spacer: Dp = 15.dp,
     enable: Boolean = true
 ) {
@@ -91,6 +122,38 @@ fun myFieldNumber(
         onValueChange = onChange,
         modifier = modifier,
         leadingIcon = leadingIcon,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+        ),
+        placeholder = { Text(placeholder) },
+        label = { Text(label) },
+        singleLine = true,
+        enabled = enable,
+        visualTransformation = VisualTransformation.None
+    )
+
+    Spacer(modifier = Modifier.height(spacer))
+}
+
+
+@SuppressLint("ResourceAsColor")
+@Composable
+fun myFieldNumber(
+    value: String,
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String = "",
+    placeholder: String = "",
+    spacer: Dp = 15.dp,
+    enable: Boolean = true
+) {
+    val focusManager = LocalFocusManager.current
+
+    TextField(
+        value = value,
+        onValueChange = onChange,
+        modifier = modifier,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         keyboardActions = KeyboardActions(
             onNext = { focusManager.moveFocus(FocusDirection.Down) }

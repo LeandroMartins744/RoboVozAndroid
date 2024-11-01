@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.splash
+package com.example.myapplication.view.pages.splash
 
 import android.content.Intent
 import android.os.Bundle

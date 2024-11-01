@@ -11,7 +11,7 @@ data class SchedulingRequest(
     @SerializedName("playlist")
     val playlist: PlayListRequest,
     @SerializedName("date")
-    val date: Date,
+    val date: String,
     @SerializedName("iduser")
     val idUser: Int,
     @SerializedName("started")
@@ -25,7 +25,7 @@ data class SchedulingRequest(
     @SerializedName("sendEvent")
     val sendEvent: Boolean = false
 ){
-    constructor(_name: String, _playlist: PlayListRequest, _date: Date, _idUser: Int) :
+    constructor(_name: String, _playlist: PlayListRequest, _date: String, _idUser: Int) :
             this(name = _name, id = 0, playlist =  _playlist, date = _date,
             idUser = 1) {
 

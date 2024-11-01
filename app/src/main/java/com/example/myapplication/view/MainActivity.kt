@@ -47,7 +47,7 @@ import com.example.myapplication.view.theme.audios.AudioList
 import com.example.myapplication.view.theme.frame.Account
 import com.example.myapplication.view.theme.playlist.PlayListActivity
 import com.example.myapplication.view.theme.playlist.PlaylistHome
-import com.example.myapplication.view.theme.voices.VoicesHome
+import com.example.myapplication.view.pages.voices.VoicesHome
 
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel

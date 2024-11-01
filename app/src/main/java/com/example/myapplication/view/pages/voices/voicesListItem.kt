@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.voices
+package com.example.myapplication.view.pages.voices
 
 import android.content.Context
 import androidx.compose.foundation.background

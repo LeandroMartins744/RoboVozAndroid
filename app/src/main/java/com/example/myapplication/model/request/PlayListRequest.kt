@@ -14,6 +14,7 @@ data class PlayListRequest (
     @SerializedName("active")
     val active: Boolean
 ){
+    constructor(id: Int): this(id, name = "", description = "", image = "", active = true)
     constructor(name: String, desc: String): this(0, name = name, description = desc, image = "", active = true)
     constructor(id: Int, name: String, desc: String): this(id, name = name, description = desc, image = "", active = true)
 }
