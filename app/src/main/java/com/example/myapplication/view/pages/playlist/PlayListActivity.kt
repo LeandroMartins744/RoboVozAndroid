@@ -1,6 +1,7 @@
-package com.example.myapplication.view.theme.playlist
+package com.example.robovoz.view.pages.playlist
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -19,24 +20,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R
-import com.example.myapplication.model.request.PlayListRequest
-import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.util.ValidFileLocal
-import com.example.myapplication.view.MainActivity
-import com.example.myapplication.view.interfaces.Bars
-import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.theme.audios.audioListItem
-import com.example.myapplication.view.theme.frame.Utils
-import com.example.myapplication.viewModel.AudioViewModel
-import com.example.myapplication.viewModel.PlaylistViewModel
+import com.example.robovoz.R
+import com.example.robovoz.model.request.PlayListRequest
+import com.example.robovoz.model.response.AudioResponse
+import com.example.robovoz.model.response.PlayListResponse
+import com.example.robovoz.util.ValidFileLocal
+import com.example.robovoz.view.MainActivity
+import com.example.robovoz.view.interfaces.Bars
+import com.example.robovoz.view.interfaces.PhotoPicker
+import com.example.robovoz.view.theme.JetPackBottomNavigationTheme
+import com.example.robovoz.view.pages.audios.audioListItem
+import com.example.robovoz.view.pages.frame.Utils
+import com.example.robovoz.viewModel.AudioViewModel
+import com.example.robovoz.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
 class PlayListActivity : ComponentActivity() {
@@ -70,15 +72,14 @@ class PlayListActivity : ComponentActivity() {
             topBar = { Bars().topBar() },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    playListScreen(obj) { p1: String, p2: String, p3: String, p4:Boolean ->
+                    playListScreen(this@PlayListActivity, obj) { p1: String, p2: String, p3: String, p4:Boolean ->
                         if(p4)
                             deleteItem()
                         else
                             saveData(p1, p2)
                     }
 
-                    viewModelAudios.setFile(ValidFileLocal(this@PlayListActivity, ""))
-                    listAudios(viewModelAudios, ValidFileLocal(context = this@PlayListActivity, ""))
+
                 }
             },
             backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
@@ -104,14 +105,14 @@ class PlayListActivity : ComponentActivity() {
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
+fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
     var title by remember { mutableStateOf(obj.name) }
     var description by remember { mutableStateOf(obj.description) }
 
     Scaffold(
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
-                Column {
+                Column{
                     Utils().getSubTitle("Play List")
                     Text(
                         text = "Criado em: ${obj.date}",
@@ -119,6 +120,7 @@ fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String
                         color = Color.LightGray, textAlign = TextAlign.Right
                     )
 
+                    PhotoPicker().photoPickerScreen()
                     OutlinedTextField(
                         value = title,
                         modifier = Modifier.fillMaxWidth(),
@@ -148,7 +150,7 @@ fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String
                                 .size(180.dp, 60.dp)
                                 .padding(10.dp)
                                 .background(color = Color(R.color.primary)),
-                              //  .align(alignment = Alignment.End),
+                            //  .align(alignment = Alignment.End),
                             contentPadding = PaddingValues(1.dp)
                         ) {
                             Icon(
@@ -169,7 +171,7 @@ fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String
                                 .size(180.dp, 60.dp)
                                 .padding(10.dp)
                                 .background(color = Color(R.color.primary)),
-                             //   .align(alignment = Alignment.End),
+                            //   .align(alignment = Alignment.End),
                             contentPadding = PaddingValues(1.dp)
                         ) {
                             Icon(
@@ -180,50 +182,52 @@ fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String
                             androidx.compose.material.Text(text = "Deletar...")
                         }
                     }
+
+                    Row {
+                        var x = ValidFileLocal(context, "")
+                        listAudios(obj.audios, x)
+                    }
                 }
+
             }
         },
-        backgroundColor = colorResource(R.color.white) // Set background color to avoid the white flashing when you switch between screens
+        backgroundColor = colorResource(R.color.white)
     )
 }
 
 @Composable
-fun listAudios(viewModelAudios: AudioViewModel, validFileLocal: ValidFileLocal, ){
+fun listAudios(itemListResponse: List<AudioResponse>, validFileLocal: ValidFileLocal){
     Box {
         Spacer(modifier = Modifier.width(5.dp))
         var selectedIndex: Int by remember { mutableStateOf(-1) }
 
-        viewModelAudios.get()
 
-        if (viewModelAudios.loading) {
-
-        } else {
-            LazyColumn {
-                itemsIndexed(items = viewModelAudios.itemListResponse) { index, item ->
-                    audioListItem(
-                        item = item,
-                        index,
-                        selectedIndex,
-                        validFileLocal,
-                        {
-                            selectedIndex = -1
+        LazyColumn {
+            itemsIndexed(items = itemListResponse) { index, item ->
+                audioListItem(
+                    item = item,
+                    index,
+                    selectedIndex,
+                    validFileLocal,
+                    {
+                        selectedIndex = -1
+                        validFileLocal.getMediaStop()
+                        null
+                    }, { p1, p2 ->
+                        if (selectedIndex == p2) {
                             validFileLocal.getMediaStop()
-                            null
-                        }, { p1, p2 ->
-                            if (selectedIndex == p2) {
-                                validFileLocal.getMediaStop()
+                            selectedIndex = -1
+                        } else {
+                            validFileLocal.name = p1
+                            selectedIndex = p2
+                            validFileLocal.getMedia()
+                            validFileLocal.mMedia?.start()
+                            validFileLocal.mMedia?.setOnCompletionListener {
                                 selectedIndex = -1
-                            } else {
-                                validFileLocal.name = p1
-                                selectedIndex = p2
-                                validFileLocal.getMedia()
-                                validFileLocal.mMedia?.start()
-                                validFileLocal.mMedia?.setOnCompletionListener {
-                                    selectedIndex = -1
-                                }
                             }
-                        })
-                }
+                        }
+                    })
+
             }
         }
     }
