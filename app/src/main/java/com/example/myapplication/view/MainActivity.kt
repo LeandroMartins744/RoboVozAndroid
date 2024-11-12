@@ -15,12 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -35,16 +40,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
+import com.example.myapplication.view.interfaces.Alert
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.ButtonNew
-import com.example.myapplication.view.pages.home.HomeInsertActivity
+import com.example.myapplication.view.pages.account.HomeAccount
 import com.example.myapplication.view.pages.login.LoginActivity
 import com.example.myapplication.view.pages.home.HomePage
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.pages.audios.AudioList
-import com.example.myapplication.view.pages.account.account
+import com.example.myapplication.view.pages.home.HomeInsertActivity
 import com.example.myapplication.view.pages.playlist.PlayListActivity
 import com.example.myapplication.view.pages.playlist.PlayListDetailsActivity
 import com.example.myapplication.view.pages.playlist.PlaylistHome
@@ -196,7 +202,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NavigationItem.Config.route) {
-                account(LocalContext.current)
+                HomeAccount().account(LocalContext.current)
             }
         }
     }
