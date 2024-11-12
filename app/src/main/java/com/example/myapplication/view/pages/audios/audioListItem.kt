@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.audios
+package com.example.myapplication.view.pages.audios
 
 import android.content.Context
 import android.media.MediaPlayer

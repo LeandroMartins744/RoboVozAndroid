@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.audios
+package com.example.myapplication.view.pages.audios
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -32,7 +32,7 @@ import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.theme.frame.Utils
+import com.example.myapplication.view.pages.frame.Utils
 import com.example.myapplication.viewModel.AudioViewModel
 
 class AudioActivity : ComponentActivity() {
@@ -60,7 +60,7 @@ class AudioActivity : ComponentActivity() {
         val item = AudioRequest(name,description, text)
         viewModelAudio.post(item)
         Toast.makeText(this@AudioActivity, "Ação efetuada com sucesso", Toast.LENGTH_LONG).show()
-        val it: Intent = Intent(this@AudioActivity, MainActivity::class.java)
+        val it = Intent(this@AudioActivity, MainActivity::class.java)
         it.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         startActivity(it)
     }

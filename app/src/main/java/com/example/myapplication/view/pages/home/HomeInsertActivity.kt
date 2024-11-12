@@ -36,8 +36,8 @@ import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.*
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.theme.audios.audioListItem
-import com.example.myapplication.view.theme.frame.Utils
+import com.example.myapplication.view.pages.audios.audioListItem
+import com.example.myapplication.view.pages.frame.Utils
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.SchedulingViewModel

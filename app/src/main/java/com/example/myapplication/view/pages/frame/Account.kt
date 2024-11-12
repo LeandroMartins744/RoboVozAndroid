@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.frame
+package com.example.myapplication.view.pages.frame
 
 import android.content.Context
 import androidx.compose.foundation.background

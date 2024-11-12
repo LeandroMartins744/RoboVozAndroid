@@ -42,11 +42,11 @@ import com.example.myapplication.view.pages.login.LoginActivity
 import com.example.myapplication.view.pages.home.HomePage
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
-import com.example.myapplication.view.theme.audios.AudioActivity
-import com.example.myapplication.view.theme.audios.AudioList
-import com.example.myapplication.view.theme.frame.Account
-import com.example.myapplication.view.theme.playlist.PlayListActivity
-import com.example.myapplication.view.theme.playlist.PlaylistHome
+import com.example.myapplication.view.pages.audios.AudioActivity
+import com.example.myapplication.view.pages.audios.AudioList
+import com.example.myapplication.view.pages.frame.Account
+import com.example.myapplication.view.pages.playlist.PlayListActivity
+import com.example.myapplication.view.pages.playlist.PlaylistHome
 import com.example.myapplication.view.pages.voices.VoicesHome
 
 import com.example.myapplication.viewModel.AudioViewModel
@@ -168,7 +168,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NavigationItem.Playlist.route) {
-                PlaylistHome().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse, context = this@MainActivity){ p1 ->
+                PlaylistHome().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse){ p1 ->
                     val it = Intent(this@MainActivity, PlayListActivity::class.java)
                     it.putExtra("object", Gson().toJson(p1))
                     this@MainActivity.startActivity(it)

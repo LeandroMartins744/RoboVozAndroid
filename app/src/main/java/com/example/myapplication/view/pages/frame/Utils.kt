@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.frame
+package com.example.myapplication.view.pages.frame
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row

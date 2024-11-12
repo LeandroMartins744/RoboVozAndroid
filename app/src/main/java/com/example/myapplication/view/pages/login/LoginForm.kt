@@ -133,6 +133,7 @@ class LoginForm {
         )
     }
 
+    @SuppressLint("ResourceAsColor")
     @Composable
     fun PasswordField(
         value: String,

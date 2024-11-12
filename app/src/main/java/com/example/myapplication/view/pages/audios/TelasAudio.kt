@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.audios
+package com.example.myapplication.view.pages.audios
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.myapplication.view.theme.frame.Utils
+import com.example.myapplication.view.pages.frame.Utils
 
 @Composable
 fun FirstScreen(navController: NavController) {

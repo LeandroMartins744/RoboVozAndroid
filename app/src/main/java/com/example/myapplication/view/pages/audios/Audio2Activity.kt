@@ -1,4 +1,4 @@
-package com.example.myapplication.view.theme.audios
+package com.example.myapplication.view.pages.audios
 
 import android.content.Context
 import android.os.Bundle
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.ListAudiosModal
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.theme.frame.Utils
+import com.example.myapplication.view.pages.frame.Utils
 import java.util.ArrayList
 
 class Audio2Activity : ComponentActivity() {

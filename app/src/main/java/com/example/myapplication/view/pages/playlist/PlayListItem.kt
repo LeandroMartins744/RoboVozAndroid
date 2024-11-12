@@ -1,4 +1,4 @@
-package com.example.robovoz.view.pages.playlist
+package com.example.myapplication.view.pages.playlist
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
@@ -13,12 +13,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.robovoz.model.response.PlayListResponse
+import com.example.myapplication.model.response.PlayListResponse
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PlayListItem(item: PlayListResponse, index: Int, selectedIndex: Int, context: Context, onClick: (Int) -> Unit){
+fun PlayListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick: (Int) -> Unit){
     val backgroundColor =
         if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background
 

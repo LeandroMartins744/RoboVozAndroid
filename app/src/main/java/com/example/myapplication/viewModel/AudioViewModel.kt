@@ -10,6 +10,7 @@ import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.LodData
 import com.example.myapplication.util.ValidFileLocal
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 
@@ -119,11 +120,13 @@ class AudioViewModel() : ViewModel() {
         return list
     }
 
-    private fun List<AudioResponse>.setAudio(){
+    private suspend fun List<AudioResponse>.setAudio(){
         this.forEach {
             validFileLocal.name = it.audioFile
-            if(!validFileLocal.existItem())
+            if(!validFileLocal.existItem()) {
                 downloadFile()
+                delay(timeMillis = 1000)
+            }
         }
     }
 

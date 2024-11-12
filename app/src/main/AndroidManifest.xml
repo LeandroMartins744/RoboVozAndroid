@@ -28,7 +28,7 @@
 
         </activity>
         <activity
-                android:name=".view.theme.audios.AudioActivity"
+                android:name=".view.pages.audios.AudioActivity"
                 android:exported="true"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
@@ -42,14 +42,21 @@
 
         </activity>
         <activity
-                android:name=".view.theme.playlist.PlayListActivity"
+                android:name=".view.pages.playlist.PlayListActivity"
                 android:exported="true"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>
         <activity
-                android:name=".view.theme.audios.Audio2Activity"
+                android:name=".view.pages.playlist.PlayListDetailsActivity"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:theme="@style/Theme.MyApplication">
+
+        </activity>
+        <activity
+                android:name=".view.pages.audios.Audio2Activity"
                 android:exported="true"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">

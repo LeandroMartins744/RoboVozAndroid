@@ -1,4 +1,4 @@
-package com.example.robovoz.view.pages.playlist
+package com.example.myapplication.view.pages.playlist
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -26,24 +26,24 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.robovoz.R
-import com.example.robovoz.model.request.PlayListRequest
-import com.example.robovoz.model.response.AudioResponse
-import com.example.robovoz.model.response.PlayListResponse
-import com.example.robovoz.util.ValidFileLocal
-import com.example.robovoz.view.MainActivity
-import com.example.robovoz.view.interfaces.Bars
-import com.example.robovoz.view.interfaces.PhotoPicker
-import com.example.robovoz.view.theme.JetPackBottomNavigationTheme
-import com.example.robovoz.view.pages.audios.audioListItem
-import com.example.robovoz.view.pages.frame.Utils
-import com.example.robovoz.viewModel.AudioViewModel
-import com.example.robovoz.viewModel.PlaylistViewModel
+import com.example.myapplication.R
+import com.example.myapplication.model.request.PlayListRequest
+import com.example.myapplication.model.response.AudioResponse
+import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.util.DateFormat
+import com.example.myapplication.util.ValidFileLocal
+import com.example.myapplication.view.MainActivity
+import com.example.myapplication.view.interfaces.Bars
+import com.example.myapplication.view.interfaces.PhotoPicker
+import com.example.myapplication.view.interfaces.myButton
+import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
+import com.example.myapplication.view.pages.audios.audioListItem
+import com.example.myapplication.view.pages.frame.Utils
+import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
 class PlayListActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
-    private val viewModelAudios: AudioViewModel by viewModels()
     private var obj: PlayListResponse = PlayListResponse()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,53 +139,31 @@ fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (Stri
                         }
                     )
 
-                    Row {
-                        Button(
-                            onClick = {
-                                clickListener(title, description, "Image", false)
-                            },
-
-                            enabled = (title.isNotEmpty() && description.isNotEmpty()),
+                    Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
+                        Column(
                             modifier = Modifier
-                                .size(180.dp, 60.dp)
-                                .padding(10.dp)
-                                .background(color = Color(R.color.primary)),
-                            //  .align(alignment = Alignment.End),
-                            contentPadding = PaddingValues(1.dp)
+                                .weight(1f)
+                                .padding(0.dp, 0.dp, 5.dp, 0.dp)
                         ) {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_library_music_branco),
-                                contentDescription = "Favorite",
-                                modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
-                            )
-                            androidx.compose.material.Text(text = "Salvar...")
+                            myButton("Salvar", true, onClick = {
+                                clickListener(title, description, "Image", false)
+                            })
                         }
 
-                        Button(
-                            onClick = {
-                                clickListener(title, description, "Image", true)
-                            },
 
-                            enabled = obj.id != 0,
+                        Column(
                             modifier = Modifier
-                                .size(180.dp, 60.dp)
-                                .padding(10.dp)
-                                .background(color = Color(R.color.primary)),
-                            //   .align(alignment = Alignment.End),
-                            contentPadding = PaddingValues(1.dp)
+                                .weight(1f)
+                                .padding(0.dp)
                         ) {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_library_music_branco),
-                                contentDescription = "Favorite",
-                                modifier = Modifier.size(20.dp).padding(10.dp).background(color = Color.White)
-                            )
-                            androidx.compose.material.Text(text = "Deletar...")
+                            myButton("Deletar", true, color = Color.Gray, onClick = {
+                                clickListener(title, description, "Image", true)
+                            })
                         }
                     }
 
                     Row {
-                        var x = ValidFileLocal(context, "")
-                        listAudios(obj.audios, x)
+                        listAudios(obj.audios, ValidFileLocal(context, ""))
                     }
                 }
 
