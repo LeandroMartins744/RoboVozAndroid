@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.*
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.view.pages.playlist.PlayListItem
+import com.example.myapplication.view.pages.playlist.playListItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,7 +23,7 @@ fun bottomSheet(list: List<PlayListResponse>, onDismiss: (PlayListResponse) -> U
     ) {
         LazyColumn {
             itemsIndexed(items = list) { index, item ->
-                PlayListItem(
+                playListItem(
                     item = item,
                     index,
                     0

@@ -24,8 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.ListAudiosModal
+import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.pages.frame.Utils
 import java.util.ArrayList
 
 class Audio2Activity : ComponentActivity() {
@@ -66,7 +66,7 @@ fun AudioScreen2(context: Context) {
     ) {
 
         Row {
-            Utils().getSubTitle("Selecionando Audio")
+            TitlePage().setTitle("Selecionando Audio")
         }
         Row (modifier = Modifier.fillMaxWidth().padding(0.dp)){
 

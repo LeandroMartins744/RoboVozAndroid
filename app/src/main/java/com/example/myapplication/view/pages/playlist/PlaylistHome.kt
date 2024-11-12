@@ -1,7 +1,6 @@
 package com.example.myapplication.view.pages.playlist
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +20,7 @@ import com.example.myapplication.view.interfaces.loadingPage
 class PlaylistHome {
     @SuppressLint("NotConstructor")
     @Composable
-    fun List(loading: Boolean, movieList: List<PlayListResponse>, onClick: (PlayListResponse) -> Unit) {
+    fun list(loading: Boolean, movieList: List<PlayListResponse>, onClick: (PlayListResponse) -> Unit) {
 
         if (loading)
             loadingPage("Carregando PlayList")
@@ -41,7 +40,7 @@ class PlaylistHome {
                     var selectedIndex by remember { mutableStateOf(-1) }
                     LazyColumn {
                         itemsIndexed(items = movieList) { index, item ->
-                            PlayListItem(
+                            playListItem(
                                 item = item,
                                 index,
                                 selectedIndex

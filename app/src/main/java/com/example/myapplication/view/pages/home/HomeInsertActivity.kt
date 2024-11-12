@@ -7,17 +7,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -37,7 +33,6 @@ import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.*
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
-import com.example.myapplication.view.pages.frame.Utils
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.example.myapplication.viewModel.SchedulingViewModel
@@ -127,7 +122,7 @@ fun insert(list: List<PlayListResponse>, clickListener: (String, Date, Int) -> U
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                 Column {
-                    Utils().getSubTitle("Agendamento")
+                    TitlePage().setTitle("Agendamento")
 
                     myField(
                         value = title,

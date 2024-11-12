@@ -44,8 +44,9 @@ import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
 import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.pages.audios.AudioList
-import com.example.myapplication.view.pages.frame.Account
+import com.example.myapplication.view.pages.account.account
 import com.example.myapplication.view.pages.playlist.PlayListActivity
+import com.example.myapplication.view.pages.playlist.PlayListDetailsActivity
 import com.example.myapplication.view.pages.playlist.PlaylistHome
 import com.example.myapplication.view.pages.voices.VoicesHome
 
@@ -80,6 +81,12 @@ class MainActivity : ComponentActivity() {
         }
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(LocalData(this).valid())
+            this.startActivity(Intent(this, LoginActivity::class.java))
     }
 
     @Composable
@@ -164,12 +171,15 @@ class MainActivity : ComponentActivity() {
                 }
 
                 ButtonNew().actionButton {
-                    this@MainActivity.startActivity(Intent(this@MainActivity, AudioActivity::class.java))
+                    if(LocalData(this@MainActivity).getVoice().id == "")
+                        Toast.makeText(this@MainActivity, "Para cadastrar Audios, você precisa selecionar a Voz Default", Toast.LENGTH_SHORT).show()
+                    else
+                        this@MainActivity.startActivity(Intent(this@MainActivity, AudioActivity::class.java))
                 }
             }
             composable(NavigationItem.Playlist.route) {
-                PlaylistHome().List(viewModelPlaylist.loading, viewModelPlaylist.playListResponse){ p1 ->
-                    val it = Intent(this@MainActivity, PlayListActivity::class.java)
+                PlaylistHome().list(viewModelPlaylist.loading, viewModelPlaylist.playListResponse){ p1 ->
+                    val it = Intent(this@MainActivity, PlayListDetailsActivity::class.java)
                     it.putExtra("object", Gson().toJson(p1))
                     this@MainActivity.startActivity(it)
                 }
@@ -186,7 +196,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NavigationItem.Config.route) {
-                Account(LocalContext.current)
+                account(LocalContext.current)
             }
         }
     }

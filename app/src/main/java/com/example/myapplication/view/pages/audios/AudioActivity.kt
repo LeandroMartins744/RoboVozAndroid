@@ -31,8 +31,8 @@ import com.example.myapplication.model.request.AudioRequest
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
+import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.pages.frame.Utils
 import com.example.myapplication.viewModel.AudioViewModel
 
 class AudioActivity : ComponentActivity() {
@@ -81,7 +81,7 @@ fun audioScreen(context: Context, onClick: (String, String, String) -> Unit) {
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
 
                 Column{
-                    Utils().getSubTitle("Criação de Audio")
+                    TitlePage().setTitle("Criação de Audio")
                     Text(
                         text = "Criado em: 08/10/2025 10:35",
                         modifier = Modifier.fillMaxWidth(),

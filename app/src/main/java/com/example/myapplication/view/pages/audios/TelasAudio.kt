@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.myapplication.view.pages.frame.Utils
+import com.example.myapplication.view.interfaces.TitlePage
 
 @Composable
 fun FirstScreen(navController: NavController) {
@@ -19,7 +19,7 @@ fun FirstScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Utils().getSubTitle("Texto")
+        TitlePage().setTitle("Texto")
         Text(
             text = "Go to Second Screen",
             color = Color.Black,
@@ -39,7 +39,7 @@ fun SecondScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Utils().getSubTitle("Texto1111")
+        TitlePage().setTitle("Texto1111")
         Text(
             text = "Go to First Screen",
             color = Color.Black,

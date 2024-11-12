@@ -1,6 +1,5 @@
 package com.example.myapplication.view.pages.playlist
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -18,7 +17,7 @@ import com.example.myapplication.model.response.PlayListResponse
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PlayListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick: (Int) -> Unit){
+fun playListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick: (Int) -> Unit){
     val backgroundColor =
         if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background
 

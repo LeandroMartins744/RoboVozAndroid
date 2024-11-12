@@ -32,19 +32,20 @@ import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
+import com.example.myapplication.view.interfaces.ButtonNew
 import com.example.myapplication.view.interfaces.NotItemList
+import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
-import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
 class PlayListDetailsActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
-    private val viewModelAudios: AudioViewModel by viewModels()
     private var obj: PlayListResponse = PlayListResponse()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,12 @@ class PlayListDetailsActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     page()
+                    ButtonNew().actionButton {
+                        if(LocalData(this@PlayListDetailsActivity).getVoice().id == "")
+                            Toast.makeText(this@PlayListDetailsActivity, "Para cadastrar Audios, você precisa selecionar a Voz Default", Toast.LENGTH_SHORT).show()
+                        else
+                            this@PlayListDetailsActivity.startActivity(Intent(this@PlayListDetailsActivity, AudioActivity::class.java))
+                    }
                 }
             }
         }

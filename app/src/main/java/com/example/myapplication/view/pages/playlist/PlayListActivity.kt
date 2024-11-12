@@ -8,14 +8,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,22 +20,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.PhotoPicker
+import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.myButton
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
-import com.example.myapplication.view.pages.frame.Utils
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
@@ -113,7 +108,7 @@ fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (Stri
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                 Column{
-                    Utils().getSubTitle("Play List")
+                    TitlePage().setTitle("Play List")
                     Text(
                         text = "Criado em: ${obj.date}",
                         modifier = Modifier.fillMaxWidth(),
