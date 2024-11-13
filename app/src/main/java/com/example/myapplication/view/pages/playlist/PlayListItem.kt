@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.myapplication.R
 import com.example.myapplication.model.response.PlayListResponse
 
 
@@ -36,7 +37,7 @@ fun playListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick
                 Spacer(modifier = Modifier.width(5.dp))
 
                 AsyncImage(
-                    model = item.image,
+                    model = R.drawable.img,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(80.dp)

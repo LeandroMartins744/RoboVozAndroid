@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,6 +41,18 @@ class ButtonNew{
             contentColor = Color(R.color.button_new)
         ) {
             Icon(Icons.Filled.Add, "Cadastrar novo item")
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    @Composable
+    fun deleteSmallButton(onClick: () -> Unit) {
+        SmallFloatingActionButton(
+            onClick = { onClick() },
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = Color(R.color.button_remove)
+        ) {
+            Icon(Icons.Filled.Delete, "Deletar item")
         }
     }
 

@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
     fun BottomNavigationBar(navController: NavController) {
         val items = listOf(
             NavigationItem.Home,
-            NavigationItem.Audios,
+            //NavigationItem.Audios,
             NavigationItem.Playlist,
             NavigationItem.Voices,
             NavigationItem.Config
@@ -162,27 +162,17 @@ class MainActivity : ComponentActivity() {
     fun navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomePage().listSchedule(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, context = this@MainActivity)
+                HomePage().listSchedule(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, onDelete = { p1 ->
+                    viewModelScheduling.delete(p1)
+                    Toast.makeText(this@MainActivity, "Item removido com sucesso!", Toast.LENGTH_SHORT).show()
+                    viewModelScheduling.get()
+                })
 
                 ButtonNew().actionButton {
                     this@MainActivity.startActivity(Intent(this@MainActivity, HomeInsertActivity::class.java))
                 }
             }
-            composable(NavigationItem.Audios.route) {
-
-                AudioList().audios(viewModelAudio.loading, viewModelAudio.itemListResponse, validFileLocal = ValidFileLocal(this@MainActivity, "")){ p1 ->
-                    val it = Intent(this@MainActivity, AudioActivity::class.java)
-                    it.putExtra("object", Gson().toJson(p1))
-                    this@MainActivity.startActivity(it)
-                }
-
-                ButtonNew().actionButton {
-                    if(LocalData(this@MainActivity).getVoice().id == "")
-                        Toast.makeText(this@MainActivity, "Para cadastrar Audios, você precisa selecionar a Voz Default", Toast.LENGTH_SHORT).show()
-                    else
-                        this@MainActivity.startActivity(Intent(this@MainActivity, AudioActivity::class.java))
-                }
-            }
+//
             composable(NavigationItem.Playlist.route) {
                 PlaylistHome().list(viewModelPlaylist.loading, viewModelPlaylist.playListResponse){ p1 ->
                     val it = Intent(this@MainActivity, PlayListDetailsActivity::class.java)
@@ -211,10 +201,10 @@ class MainActivity : ComponentActivity() {
         when(item.route){
             NavigationItem.Home.route -> viewModelScheduling.get()
             NavigationItem.Playlist.route -> viewModelPlaylist.get()
-            NavigationItem.Audios.route -> {
-                viewModelAudio.setFile(ValidFileLocal(this@MainActivity, ""))
-                viewModelAudio.get()
-            }
+//            NavigationItem.Audios.route -> {
+//                viewModelAudio.setFile(ValidFileLocal(this@MainActivity, ""))
+//                viewModelAudio.get()
+//            }
             //NavigationItem.Audios.route -> viewModelAudio.downloadFile(this@MainActivity.filesDir.absoluteFile.toString()) //.get()
             NavigationItem.Voices.route -> viewModelVoices.get()
             NavigationItem.Config.route -> Log.e("Lit", "==========================   AUDIO  =================")

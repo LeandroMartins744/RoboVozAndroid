@@ -28,19 +28,20 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
-import com.example.myapplication.view.interfaces.Bars
-import com.example.myapplication.view.interfaces.ButtonNew
-import com.example.myapplication.view.interfaces.NotItemList
+import com.example.myapplication.view.interfaces.*
 import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
+import com.example.myapplication.view.pages.login.LoginActivity
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
 
@@ -80,14 +81,9 @@ class PlayListDetailsActivity : ComponentActivity() {
             topBar = { Bars().topBar() },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    details(this@PlayListDetailsActivity, obj) { p1: String, p2: String, p3: String, p4:Boolean ->
-                        if(p4)
-                            deleteItem()
-                        else
-                            saveData(p1, p2)
+                    details(this@PlayListDetailsActivity, obj) {
+                        deleteItem()
                     }
-
-
                 }
             },
             backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
@@ -104,8 +100,17 @@ class PlayListDetailsActivity : ComponentActivity() {
 
     private fun deleteItem(){
         viewModel.delete(obj.id)
-        Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
-        this.startActivity(Intent(this, MainActivity::class.java))
+        viewModel.resultData.observe(this, Observer { it ->
+            if(it == "1"){
+                Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
+                this.startActivity(Intent(this, MainActivity::class.java))
+            }
+            if(it == "2"){
+                Toast.makeText(this, "Não foi possível deletar o item, pois ele possui agendamento.", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
     }
 }
 
@@ -113,9 +118,11 @@ class PlayListDetailsActivity : ComponentActivity() {
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun details(context: Context, obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
+fun details(context: Context, obj: PlayListResponse, onDelete: () -> Unit) {
     var title by remember { mutableStateOf(obj.name) }
     var description by remember { mutableStateOf(obj.description) }
+    val openDialog = remember { mutableStateOf(false) }
+
     Scaffold(
         content = {
             Box(
@@ -124,17 +131,35 @@ fun details(context: Context, obj: PlayListResponse, clickListener: (String, Str
             )
 
             Column(modifier = Modifier.height(200.dp).padding(15.dp), horizontalAlignment = Alignment.Start) {
-                Text(text = obj.name, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                Text(text = obj.description, color = Color.White)
-                Text(text = "10/01/2024 10:32", color = Color.White, fontStyle = FontStyle.Italic)
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(0.9f)
+                            .padding(0.dp, 0.dp, 5.dp, 10.dp)
+                    ) {
+                        Text(text = obj.name, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                        Text(text = obj.description, color = Color.White)
+                        Text(text = "10/01/2024 10:32", color = Color.White, fontStyle = FontStyle.Italic)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(0.1f)
+                            .padding(0.dp, 0.dp, 5.dp, 10.dp), horizontalAlignment = Alignment.End
+                    ) {
+                        ButtonNew().deleteSmallButton{
+                            openDialog.value = true
+                        }
+                    }
+                }
+
             }
             Column(modifier = Modifier.fillMaxSize().padding(0.dp, 150.dp, 0.dp, 0.dp).background(color = Color.White)) {
                 Column(modifier = Modifier.fillMaxSize().padding(15.dp), horizontalAlignment = Alignment.Start) {
                     if (obj.audios.isEmpty())
                         NotItemList().listClean()
                     else {
-                        var x = ValidFileLocal(context, "")
-                        listItensDetails(obj.audios, x)
+                        listItensDetails(obj.audios, ValidFileLocal(context, ""))
                     }
                 }
             }
@@ -142,6 +167,16 @@ fun details(context: Context, obj: PlayListResponse, clickListener: (String, Str
         },
         backgroundColor = colorResource(R.color.white)
     )
+
+    Alert().confirmation(
+        "Atenção",
+        "Tem certeza que quer remover o item, todos os audios do playlist será removido ?",
+        openDialog,
+        onConfirmation = {
+            onDelete()
+            openDialog.value = false
+        },
+        onCancel = { openDialog.value = false })
 }
 
 @Composable

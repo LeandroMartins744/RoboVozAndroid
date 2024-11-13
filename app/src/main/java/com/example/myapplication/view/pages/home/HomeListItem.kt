@@ -1,6 +1,5 @@
 package com.example.myapplication.view.pages.home
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -10,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -19,15 +20,18 @@ import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.model.response.SchedulingResponse
 import com.example.myapplication.R
 import com.example.myapplication.util.DateFormat
+import com.example.myapplication.view.interfaces.Alert
+import com.example.myapplication.view.interfaces.ButtonNew
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, context: Context, onClick: (Int) -> Unit){
+fun homeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, onClick: (Int) -> Unit, onDelete: (Int) -> Unit){
     val backgroundColor =
         if (index == selectedIndex) MaterialTheme.colors.primary else MaterialTheme.colors.background
 
+    val openDialog = remember { mutableStateOf(false) }
 
     androidx.compose.material.Card(
         onClick = { onClick(index)
@@ -57,7 +61,8 @@ fun HomeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, conte
 
                 Spacer(modifier = Modifier.width(5.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+
+                Column(modifier = Modifier.fillMaxWidth().weight(0.9f)) {
                     Text(
                         text = item.name,
                         modifier = Modifier.padding(4.dp),
@@ -80,8 +85,23 @@ fun HomeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, conte
                         color = Color.LightGray, textAlign = TextAlign.Right
                     )
                 }
+                Column(modifier = Modifier.fillMaxWidth().weight(0.1f)) {
+                    ButtonNew().deleteSmallButton{
+                        openDialog.value = true
+                    }
+                }
             }
         }
+
+        Alert().confirmation(
+            "Atenção",
+            "Tem certeza que quer remover o item ?",
+            openDialog,
+            onConfirmation = {
+                onDelete(item.id)
+                openDialog.value = false
+            },
+            onCancel = { openDialog.value = false })
     }
 }
 fun started(obj:Boolean) = if(obj) R.drawable.baseline_schedule_ok_24 else R.drawable.baseline_schedule_24

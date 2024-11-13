@@ -9,8 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -20,22 +18,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.request.PlayListRequest
-import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.PhotoPicker
 import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.myButton
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
-import com.example.myapplication.view.pages.audios.audioListItem
 import com.example.myapplication.viewModel.PlaylistViewModel
-import com.google.gson.Gson
 
 class PlayListActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
@@ -43,11 +36,6 @@ class PlayListActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val informant = intent.getStringExtra("object")
-
-        if (!informant.isNullOrBlank())
-            obj = Gson().fromJson(informant, PlayListResponse::class.java)
 
         setContent {
             JetPackBottomNavigationTheme {
@@ -68,30 +56,17 @@ class PlayListActivity : ComponentActivity() {
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
                     playListScreen(this@PlayListActivity, obj) { p1: String, p2: String, p3: String, p4:Boolean ->
-                        if(p4)
-                            deleteItem()
-                        else
-                            saveData(p1, p2)
+                        saveData(p1, p2)
                     }
-
-
                 }
             },
-            backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
+            backgroundColor = colorResource(R.color.primary)
         )
     }
     private fun saveData(name: String, description: String){
-        if(obj.id == 0)
-            viewModel.post(PlayListRequest(name, description))
-        else
-            viewModel.put(PlayListRequest(obj.id, name, description))
-        Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
-        this.startActivity(Intent(this, MainActivity::class.java))
-    }
+        viewModel.post(PlayListRequest(name, description))
 
-    private fun deleteItem(){
-        viewModel.delete(obj.id)
-        Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
         this.startActivity(Intent(this, MainActivity::class.java))
     }
 }
@@ -103,19 +78,16 @@ class PlayListActivity : ComponentActivity() {
 fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
     var title by remember { mutableStateOf(obj.name) }
     var description by remember { mutableStateOf(obj.description) }
+    var image by remember { mutableStateOf(obj.image) }
+
 
     Scaffold(
         content = { padding ->
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                 Column{
-                    TitlePage().setTitle("Play List")
-                    Text(
-                        text = "Criado em: ${obj.date}",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.LightGray, textAlign = TextAlign.Right
-                    )
-
-                    PhotoPicker().photoPickerScreen()
+                    TitlePage().setTitle("PlayList")
+                    //Seleção de foto
+                    //PhotoPicker().photoPickerScreen(tttttt = image)
                     OutlinedTextField(
                         value = title,
                         modifier = Modifier.fillMaxWidth(),
@@ -152,13 +124,9 @@ fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (Stri
                                 .padding(0.dp)
                         ) {
                             myButton("Deletar", true, color = Color.Gray, onClick = {
-                                clickListener(title, description, "Image", true)
+                                clickListener(title, description, "image", true)
                             })
                         }
-                    }
-
-                    Row {
-                        listAudios(obj.audios, ValidFileLocal(context, ""))
                     }
                 }
 
@@ -166,42 +134,4 @@ fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (Stri
         },
         backgroundColor = colorResource(R.color.white)
     )
-}
-
-@Composable
-fun listAudios(itemListResponse: List<AudioResponse>, validFileLocal: ValidFileLocal){
-    Box {
-        Spacer(modifier = Modifier.width(5.dp))
-        var selectedIndex: Int by remember { mutableStateOf(-1) }
-
-
-        LazyColumn {
-            itemsIndexed(items = itemListResponse) { index, item ->
-                audioListItem(
-                    item = item,
-                    index,
-                    selectedIndex,
-                    validFileLocal,
-                    {
-                        selectedIndex = -1
-                        validFileLocal.getMediaStop()
-                        null
-                    }, { p1, p2 ->
-                        if (selectedIndex == p2) {
-                            validFileLocal.getMediaStop()
-                            selectedIndex = -1
-                        } else {
-                            validFileLocal.name = p1
-                            selectedIndex = p2
-                            validFileLocal.getMedia()
-                            validFileLocal.mMedia?.start()
-                            validFileLocal.mMedia?.setOnCompletionListener {
-                                selectedIndex = -1
-                            }
-                        }
-                    })
-
-            }
-        }
-    }
 }

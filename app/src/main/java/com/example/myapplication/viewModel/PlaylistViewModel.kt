@@ -19,6 +19,8 @@ class PlaylistViewModel() : ViewModel() {
     var playResponse: PlayListResponse by mutableStateOf(PlayListResponse())
     private val apiService = ApiService.getInstance().create(PlaylistEndpoints::class.java)
 
+    val resultData = MutableLiveData<String>()
+
     fun get() {
         viewModelScope.launch {
             try {
@@ -74,12 +76,18 @@ class PlaylistViewModel() : ViewModel() {
     }
 
     fun delete(id: Int) {
+        resultData.value = "0"
         viewModelScope.launch {
             try {
                 apiService.delete(AuthTokenService().getAuthToken(), id)
+                resultData.value = "1"
             }
             catch (e: Exception) {
                 LodData.setLog(e)
+                if(e.message?.contains("403") == true)
+                    resultData.value = "2"
+                else
+                    resultData.value = "1"
             }
         }
     }

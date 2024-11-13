@@ -33,7 +33,6 @@ class HomeAccount {
         val openDialog = remember { mutableStateOf(false) }
 
         Scaffold(
-            topBar = { Bars().topBar() },
             content = {
                 Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                     Column {

@@ -1,10 +1,7 @@
 package com.example.myapplication.view.interfaces
 
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -23,44 +20,76 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import java.io.File
 import com.example.myapplication.R
+
 
 class PhotoPicker {
     @Composable
-    fun photoPickerScreen() {
+    fun photoPickerScreen(tttttt: MutableState<String>) {
         var photoUri: Uri? by remember { mutableStateOf(null) }
 
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             photoUri = uri
-        }
 
+
+//FUNCIONA A CONVERSÃO
+//            var input: InputStream? = uri?.let { context.contentResolver.openInputStream(it) }
+//
+//            val onlyBoundsOptions = BitmapFactory.Options()
+//            onlyBoundsOptions.inJustDecodeBounds = true
+//            onlyBoundsOptions.inDither = true //optional
+//            onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888 //optional
+//            BitmapFactory.decodeStream(input, null, onlyBoundsOptions)
+//            input?.close()
+//
+//            val originalSize =
+//                if ((onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth)) onlyBoundsOptions.outHeight else onlyBoundsOptions.outWidth
+//
+//            //val ratio = if ((originalSize > THUMBNAIL_SIZE)) (originalSize / THUMBNAIL_SIZE) else 1.0
+//
+//            val bitmapOptions = BitmapFactory.Options()
+//           // bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio)
+//            bitmapOptions.inDither = true //optional
+//            bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888 //optional
+//            input = uri?.let { context.contentResolver.openInputStream(it) }
+//            val bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions)
+//            input?.close()
+//
+//            val outputStream = ByteArrayOutputStream()
+//            bitmap!!.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+//
+//            var str = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+//            var x = str
+//
+//            val decodedBytes: ByteArray = Base64.decode(
+//                str.substring(str.indexOf(",") + 1),
+//                Base64.DEFAULT
+//            )
+//
+//            var btm = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        }
 
         Column {
             Button(
                 onClick = {
-                    launcher.launch(
-                        PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
+                    launcher.launch("image/*")
                 }
             ) {
-                Text("Select Photo")
+                Text("Selecionar Foto")
             }
 
             if (photoUri != null) {
-                //Base64.encode(photoUri.toString(), Base64.DEFAULT)
-                if(File(photoUri.toString()).exists()) {
-                    var baseImge = Base64.encodeToString(File(photoUri.toString()).readBytes(), Base64.DEFAULT)
-                    var bytes = Base64.decode(baseImge, Base64.DEFAULT)
-                    var iii = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                    var i = iii
-                }
+                tttttt.value = photoUri!!.path.toString()
+                val image: ImageRequest = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(data = photoUri)
+                    .build()
+
                 val painter = rememberAsyncImagePainter(
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(data = photoUri)
-                        .build()
+                    image
                 )
+
+
                 Button(onClick = { photoUri = null } ) {
                     Text("Remover imgem")
                 }
@@ -89,3 +118,4 @@ class PhotoPicker {
         }
     }
 }
+

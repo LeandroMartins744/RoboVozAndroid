@@ -29,8 +29,6 @@ import com.example.myapplication.model.response.SchedulingResponse
 import com.example.myapplication.util.DateFormat
 import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.loadingPage
-import java.text.SimpleDateFormat
-import java.util.*
 
 class HomePage {
 
@@ -38,7 +36,7 @@ class HomePage {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @SuppressLint("NotConstructor", "ResourceAsColor")
     @Composable
-    fun listSchedule(loading: Boolean, movieList: List<SchedulingResponse>, context: Context) {
+    fun listSchedule(loading: Boolean, movieList: List<SchedulingResponse>, onDelete: (Int) -> Unit) {
 
         if (loading)
             loadingPage("Carregando Agendas")
@@ -128,8 +126,6 @@ class HomePage {
                             modifier = Modifier.size(20.dp)
                         )
                     }
-
-
                 }
 
                 if (movieList.isEmpty())
@@ -138,9 +134,11 @@ class HomePage {
                     var selectedIndex by remember { mutableStateOf(-1) }
                     LazyColumn {
                         itemsIndexed(items = movieList) { index, item ->
-                            HomeListItem(item = item, index, selectedIndex, context) { i ->
+                            homeListItem(item = item, index, selectedIndex, onClick = { i ->
                                 selectedIndex = i
-                            }
+                            }, onDelete = { id ->
+                                onDelete(id)
+                            })
                         }
                     }
                 }
