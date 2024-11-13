@@ -8,6 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -16,15 +18,22 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.util.ValidFileLocal
+import com.example.myapplication.view.interfaces.Alert
+import com.example.myapplication.view.interfaces.ButtonNew
 import okhttp3.internal.wait
 import java.io.File
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, validFileLocal: ValidFileLocal, onClick: (Int) -> Unit, onMusic: (String, Int) -> Unit) {
-    val icon =
-        if (index == selectedIndex) R.drawable.baseline_pause else R.drawable.baseline_play_circle_outline_24
+fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, download: Boolean,
+                  onClick: (Int) -> Unit, onMusic: (String, Int) -> Unit, onDelete: (Int) -> Unit) {
+
+    val icon: Int =
+        if(download) R.drawable.baseline_downloading_24
+        else if (index == selectedIndex) R.drawable.baseline_pause
+        else R.drawable.baseline_play_circle_outline_24
+    val openDialog = remember { mutableStateOf(false) }
 
     Card(
         onClick = {
@@ -51,7 +60,7 @@ fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, validFile
 
             Spacer(modifier = Modifier.width(5.dp))
 
-            Column {
+            Column(modifier = Modifier.fillMaxWidth().weight(0.9f)) {
                 Text(
                     text = item.name,
                     modifier = Modifier.padding(4.dp),
@@ -70,8 +79,22 @@ fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, validFile
                 )
             }
 
+            Column(modifier = Modifier.fillMaxWidth().weight(0.1f)) {
+                ButtonNew().deleteSmallButton{
+                    openDialog.value = true
+                }
+            }
 
         }
     }
+    Alert().confirmation(
+        "Atenção",
+        "Tem certeza que quer remover o Audio ?",
+        openDialog,
+        onConfirmation = {
+            onDelete(item.id)
+            openDialog.value = false
+        },
+        onCancel = { openDialog.value = false })
 }
 

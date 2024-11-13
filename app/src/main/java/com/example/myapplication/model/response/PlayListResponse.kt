@@ -6,7 +6,7 @@ data class PlayListResponse (
     @SerializedName("id")
     var id: Int,
     @SerializedName("audios")
-    val audios: List<AudioResponse>,
+    var audios: ArrayList<AudioResponse>,
     @SerializedName("name")
     var name: String,
     @SerializedName("description")
@@ -18,5 +18,5 @@ data class PlayListResponse (
     @SerializedName("active")
     val active: Boolean
 ){
-    constructor(): this(0, emptyList(), "", "", "", "", false)
+    constructor(): this(0, ArrayList<AudioResponse>(), "", "", "", "", false)
 }

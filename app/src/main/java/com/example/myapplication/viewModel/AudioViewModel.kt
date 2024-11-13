@@ -59,12 +59,28 @@ class AudioViewModel() : ViewModel() {
         }
     }
 
-    private fun downloadFile(){
+    fun downloadFile(){
         loading = true
         viewModelScope.launch {
             try {
                 val item: ResponseBody = apiService.download(AuthTokenService().getAuthToken(), validFileLocal.name)
                 validFileLocal.saveFile(item)
+                delay(timeMillis = 1000)
+                loading = false
+            }
+            catch (e: Exception) {
+                LodData.setLog(e)
+            }
+        }
+    }
+
+    fun downloadFilePage(name: String, validFileLocal: ValidFileLocal){
+        loading = true
+        viewModelScope.launch {
+            try {
+                val item: ResponseBody = apiService.download(AuthTokenService().getAuthToken(), name)
+                validFileLocal.saveFile(item)
+                delay(timeMillis = 3000)
             }
             catch (e: Exception) {
                 LodData.setLog(e)
@@ -76,7 +92,7 @@ class AudioViewModel() : ViewModel() {
         loading = true
         viewModelScope.launch {
             try {
-                obj.audio = "Novo teste de audio, agora está funcionando, já esta mais que na hora, foi ?"
+                //obj.audio = "Novo teste de audio, agora está funcionando, já esta mais que na hora, foi ?"
                 val item = apiService.post(AuthTokenService().getAuthToken(), obj)
                 item.date = DateFormat().getFormat(item.date)
                 itemResponse = item

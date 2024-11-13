@@ -42,12 +42,14 @@ import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
 import com.example.myapplication.view.pages.login.LoginActivity
+import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 
 class PlayListDetailsActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()
-    private var obj: PlayListResponse = PlayListResponse()
+    private val viewModelAudio: AudioViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +57,7 @@ class PlayListDetailsActivity : ComponentActivity() {
         val informant = intent.getStringExtra("object")
 
         if (!informant.isNullOrBlank())
-            obj = Gson().fromJson(informant, PlayListResponse::class.java)
+            viewModel.playResponse = Gson().fromJson(informant, PlayListResponse::class.java)
 
         setContent {
             JetPackBottomNavigationTheme {
@@ -67,8 +69,11 @@ class PlayListDetailsActivity : ComponentActivity() {
                     ButtonNew().actionButton {
                         if(LocalData(this@PlayListDetailsActivity).getVoice().id == "")
                             Toast.makeText(this@PlayListDetailsActivity, "Para cadastrar Audios, você precisa selecionar a Voz Default", Toast.LENGTH_SHORT).show()
-                        else
-                            this@PlayListDetailsActivity.startActivity(Intent(this@PlayListDetailsActivity, AudioActivity::class.java))
+                        else {
+                            val it = Intent(this@PlayListDetailsActivity, AudioActivity::class.java)
+                            it.putExtra("object", viewModel.playResponse.id.toString())
+                            this@PlayListDetailsActivity.startActivity(it)
+                        }
                     }
                 }
             }
@@ -81,25 +86,21 @@ class PlayListDetailsActivity : ComponentActivity() {
             topBar = { Bars().topBar() },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    details(this@PlayListDetailsActivity, obj) {
+                    details(viewModelAudio, this@PlayListDetailsActivity, viewModel.playResponse, {
                         deleteItem()
-                    }
+                    }, { id ->
+                        deleteAudio(id)
+                        //viewModel.get(viewModel.playResponse.id)
+                        this@PlayListDetailsActivity.startActivity(Intent(this@PlayListDetailsActivity, MainActivity::class.java))
+                    })
                 }
             },
             backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
         )
     }
-    private fun saveData(name: String, description: String){
-        if(obj.id == 0)
-            viewModel.post(PlayListRequest(name, description))
-        else
-            viewModel.put(PlayListRequest(obj.id, name, description))
-        Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
-        this.startActivity(Intent(this, MainActivity::class.java))
-    }
 
     private fun deleteItem(){
-        viewModel.delete(obj.id)
+        viewModel.delete(viewModel.playResponse.id)
         viewModel.resultData.observe(this, Observer { it ->
             if(it == "1"){
                 Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
@@ -109,18 +110,26 @@ class PlayListDetailsActivity : ComponentActivity() {
                 Toast.makeText(this, "Não foi possível deletar o item, pois ele possui agendamento.", Toast.LENGTH_LONG).show()
             }
         })
+    }
 
+    private fun deleteAudio(id: Int){
+        viewModelAudio.delete(id)
+        Toast.makeText(this, "Remoção efetuada com sucesso", Toast.LENGTH_LONG).show()
+        viewModel.playResponse.audios.forEachIndexed { i, index ->
+            if(index.id == id) {
+                viewModel.playResponse.audios.remove(index)
+                return
+            }
+        }
 
+       // page()
     }
 }
 
 
-
 @SuppressLint("ResourceAsColor")
 @Composable
-fun details(context: Context, obj: PlayListResponse, onDelete: () -> Unit) {
-    var title by remember { mutableStateOf(obj.name) }
-    var description by remember { mutableStateOf(obj.description) }
+fun details(viewModel: AudioViewModel, context: Context, obj: PlayListResponse, onDelete: () -> Unit, onDeleteAudio: (Int) -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -159,7 +168,7 @@ fun details(context: Context, obj: PlayListResponse, onDelete: () -> Unit) {
                     if (obj.audios.isEmpty())
                         NotItemList().listClean()
                     else {
-                        listItensDetails(obj.audios, ValidFileLocal(context, ""))
+                        listItensDetails(viewModel, obj.audios, ValidFileLocal(context, ""), onDeleteAudio)
                     }
                 }
             }
@@ -180,10 +189,11 @@ fun details(context: Context, obj: PlayListResponse, onDelete: () -> Unit) {
 }
 
 @Composable
-fun listItensDetails(itemListResponse: List<AudioResponse>, validFileLocal: ValidFileLocal){
+fun listItensDetails(viewModel: AudioViewModel, itemListResponse: List<AudioResponse>, validFileLocal: ValidFileLocal, onDelete: (Int) -> Unit){
     Box {
         Spacer(modifier = Modifier.width(5.dp))
         var selectedIndex: Int by remember { mutableStateOf(-1) }
+        var download: Boolean by remember { mutableStateOf(false) }
 
 
         LazyColumn {
@@ -192,7 +202,7 @@ fun listItensDetails(itemListResponse: List<AudioResponse>, validFileLocal: Vali
                     item = item,
                     index,
                     selectedIndex,
-                    validFileLocal,
+                    download,
                     {
                         selectedIndex = -1
                         validFileLocal.getMediaStop()
@@ -202,15 +212,21 @@ fun listItensDetails(itemListResponse: List<AudioResponse>, validFileLocal: Vali
                             validFileLocal.getMediaStop()
                             selectedIndex = -1
                         } else {
+                            download = true
                             validFileLocal.name = p1
                             selectedIndex = p2
+
+                            if(!validFileLocal.existItem()) {
+                                viewModel.downloadFilePage(p1, validFileLocal)
+                            }
+                            download = false
                             validFileLocal.getMedia()
                             validFileLocal.mMedia?.start()
                             validFileLocal.mMedia?.setOnCompletionListener {
                                 selectedIndex = -1
                             }
                         }
-                    })
+                    }, onDelete)
 
             }
         }

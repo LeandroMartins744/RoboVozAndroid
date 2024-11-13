@@ -27,7 +27,7 @@ import com.example.myapplication.view.interfaces.loadingPage
 class AudioList {
     @SuppressLint("ResourceAsColor")
     @Composable
-    fun audios(loading: Boolean, movieList: List<AudioResponse>, validFileLocal: ValidFileLocal, onClick: (AudioResponse) -> Unit) {
+    fun audios(loading: Boolean, movieList: List<AudioResponse>, validFileLocal: ValidFileLocal, onClick: (AudioResponse) -> Unit, onDelete: (Int) -> Unit) {
         if (loading)
             loadingPage("Carregando Audios")
         else {
@@ -72,12 +72,13 @@ class AudioList {
                                 item = item,
                                 index,
                                 selectedIndex,
-                                validFileLocal,
+                                true,
                                 {
                                     selectedIndex = -1
                                     validFileLocal.getMediaStop()
                                     onClick(item)
-                                }, { p1, p2 ->
+                                },
+                                { p1, p2 ->
                                     if (selectedIndex == p2) {
                                         validFileLocal.getMediaStop()
                                         selectedIndex = -1
@@ -90,7 +91,7 @@ class AudioList {
                                             selectedIndex = -1
                                         }
                                     }
-                                })
+                                }, onDelete)
                         }
                     }
                 }

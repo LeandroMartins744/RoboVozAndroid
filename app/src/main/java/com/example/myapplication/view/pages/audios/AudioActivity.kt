@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.request.AudioRequest
+import com.example.myapplication.model.response.VoicesResponse
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
@@ -37,9 +38,14 @@ import com.example.myapplication.viewModel.AudioViewModel
 
 class AudioActivity : ComponentActivity() {
     private val viewModelAudio: AudioViewModel by viewModels()
+    private var voice: VoicesResponse = VoicesResponse()
+    private var playlist: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        playlist = intent.getStringExtra("object").toString().toInt()
+
         setContent {
             JetPackBottomNavigationTheme {
                 Surface(
@@ -51,13 +57,16 @@ class AudioActivity : ComponentActivity() {
                             createVoice(p1, p2, p3)
                         }
                     }
+
+                    voice = LocalData(this@AudioActivity).getVoice()
                 }
             }
         }
     }
 
     private fun createVoice(name: String, description: String, text: String){
-        val item = AudioRequest(name,description, text)
+        val item = AudioRequest(name, description, text, voice.id)
+        item.playlist = playlist
         viewModelAudio.post(item)
         Toast.makeText(this@AudioActivity, "Ação efetuada com sucesso", Toast.LENGTH_LONG).show()
         val it = Intent(this@AudioActivity, MainActivity::class.java)
@@ -82,12 +91,12 @@ fun audioScreen(context: Context, onClick: (String, String, String) -> Unit) {
 
                 Column{
                     TitlePage().setTitle("Criação de Audio")
-                    Text(
-                        text = "Criado em: 08/10/2025 10:35",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.LightGray, textAlign = TextAlign.Right
-                    )
-                    Row(modifier = Modifier.height(60.dp)) {
+//                    Text(
+//                        text = "Criado em: 08/10/2025 10:35",
+//                        modifier = Modifier.fillMaxWidth(),
+//                        color = Color.LightGray, textAlign = TextAlign.Right
+//                    )
+                    Row(modifier = Modifier.height(60.dp).padding(top = 20.dp)) {
                         playerVoice(context)
                     }
 

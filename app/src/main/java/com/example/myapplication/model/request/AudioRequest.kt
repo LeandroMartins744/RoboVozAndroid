@@ -12,8 +12,10 @@ data class AudioRequest (
     @SerializedName("audio")
     var audio: String,
     @SerializedName("playlist")
-    val playlist: Int
+    var playlist: Int,
+    @SerializedName("voice")
+    val voice: String,
 
 ){
-    constructor(name: String, description: String, audio: String): this( name, description, audio, 1)
+    constructor(name: String, description: String, audio: String, voice: String): this( name, description, audio, 1, voice)
 }
