@@ -1,5 +1,6 @@
 package com.example.myapplication.view.interfaces
 
+import MyColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 
 @Composable
-fun myButton(text: String, enable: Boolean = true, color: Color = Color.Blue, onClick: () -> Unit) {
+fun myButton(text: String, enable: Boolean = true, color: Color = MyColor.blue, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
         enabled = enable,

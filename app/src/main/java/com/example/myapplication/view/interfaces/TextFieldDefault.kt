@@ -98,6 +98,38 @@ fun myField(
 
 @SuppressLint("ResourceAsColor")
 @Composable
+fun myFieldMask(
+    value: String,
+    visualTransformation: VisualTransformation,
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String = "",
+    placeholder: String = "",
+    spacer: Dp = 15.dp,
+    enable: Boolean = true
+) {
+    val focusManager = LocalFocusManager.current
+
+    TextField(
+        value = value,
+        onValueChange = onChange,
+        modifier = modifier,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardActions = KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+        ),
+        placeholder = { Text(placeholder) },
+        label = { Text(label) },
+        singleLine = true,
+        enabled = enable,
+        visualTransformation = visualTransformation
+    )
+
+    Spacer(modifier = Modifier.height(spacer))
+}
+
+@SuppressLint("ResourceAsColor")
+@Composable
 fun myFieldNumber(
     value: String,
     onChange: (String) -> Unit,

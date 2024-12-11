@@ -30,10 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import com.example.myapplication.R
-import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.AudioResponse
 import com.example.myapplication.model.response.PlayListResponse
-import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
@@ -41,11 +39,9 @@ import com.example.myapplication.view.interfaces.*
 import com.example.myapplication.view.pages.audios.AudioActivity
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.pages.audios.audioListItem
-import com.example.myapplication.view.pages.login.LoginActivity
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.PlaylistViewModel
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
 
 class PlayListDetailsActivity : ComponentActivity() {
     private val viewModel: PlaylistViewModel by viewModels()

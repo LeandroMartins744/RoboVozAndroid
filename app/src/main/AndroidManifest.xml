@@ -23,42 +23,42 @@
                 android:name=".view.pages.login.LoginActivity"
                 android:exported="true"
                 android:noHistory="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
-
         </activity>
+
+        <activity
+                android:name=".view.pages.client.ClientActivity"
+                android:exported="true"
+                android:theme="@style/Theme.MyApplication">
+        </activity>
+
         <activity
                 android:name=".view.pages.audios.AudioActivity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>
         <activity
                 android:name=".view.pages.home.HomeInsertActivity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>
         <activity
                 android:name=".view.pages.playlist.PlayListActivity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>
         <activity
                 android:name=".view.pages.playlist.PlayListDetailsActivity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>
         <activity
                 android:name=".view.pages.audios.Audio2Activity"
                 android:exported="true"
-                android:label="@string/app_name"
                 android:theme="@style/Theme.MyApplication">
 
         </activity>

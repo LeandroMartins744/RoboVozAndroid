@@ -1,5 +1,6 @@
 package com.example.myapplication.view.pages.login
 
+import MyColor
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -11,11 +12,7 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,14 +25,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.view.interfaces.myButton
 import com.example.myapplication.viewModel.UsersViewModel
 
 
 class LoginForm {
     @Composable
-    fun form(viewModel: UsersViewModel, clickListener: (String, String) -> Unit) {
+    fun form(viewModel: UsersViewModel, clickListener: (String, String) -> Unit, onClickCad: () -> Unit) {
         var credentials by remember { mutableStateOf(Credentials()) }
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -72,17 +72,31 @@ class LoginForm {
                     submit = { clickListener(credentials.login, credentials.pwd) },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
                         clickListener(credentials.login, credentials.pwd)
                         viewModel.setValue()
                               },
-                    enabled = (credentials.isNotEmpty() && viewModel.isButton),
+                    enabled = true,
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(viewModel.textCampo)
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        onClickCad()
+                    },
+                    enabled = true,
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MyColor.orange),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cadastrar-se")
                 }
             }
         }
@@ -162,7 +176,6 @@ class LoginForm {
                 )
             }
         }
-
 
         TextField(
             value = value,

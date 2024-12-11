@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.MainActivity
+import com.example.myapplication.view.pages.client.ClientActivity
 import com.example.myapplication.view.theme.MyLoginApplicationTheme
 import com.example.myapplication.viewModel.UsersViewModel
 
@@ -21,9 +22,11 @@ class LoginActivity : ComponentActivity() {
 
         setContent{
             MyLoginApplicationTheme {
-                loginForm.form(viewModel) { p1: String, p2: String ->
+                loginForm.form(viewModel, { p1: String, p2: String ->
                     execute(p1, p2)
-                }
+                }, {
+                    this.startActivity(Intent(this, ClientActivity::class.java))
+                })
             }
         }
     }
