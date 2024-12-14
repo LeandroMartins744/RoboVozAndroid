@@ -1,6 +1,6 @@
 package com.example.myapplication.view.pages.login
 
-import MyColor
+import myColor
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -25,11 +25,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.example.myapplication.view.interfaces.myButton
 import com.example.myapplication.viewModel.UsersViewModel
 
 
@@ -93,7 +90,7 @@ class LoginForm {
                     },
                     enabled = true,
                     shape = RoundedCornerShape(5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MyColor.orange),
+                    colors = ButtonDefaults.buttonColors(containerColor = myColor.orange),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Cadastrar-se")

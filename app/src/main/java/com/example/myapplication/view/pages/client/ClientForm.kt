@@ -1,6 +1,6 @@
 package com.example.myapplication.view.pages.client
 
-import MyColor
+import myColor
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -161,7 +161,7 @@ class ClientForm {
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        myButton(text = "Cancelar", color = MyColor.orange) {
+                        myButton(text = "Cancelar", color = myColor.orange) {
                             onBack()
                         }
                     }

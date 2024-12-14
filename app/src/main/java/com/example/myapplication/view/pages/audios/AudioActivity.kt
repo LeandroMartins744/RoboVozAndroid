@@ -17,6 +17,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,14 +31,23 @@ import com.example.myapplication.R
 import com.example.myapplication.model.request.AudioRequest
 import com.example.myapplication.model.response.VoicesResponse
 import com.example.myapplication.util.LocalData
+import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.TitlePage
+import com.example.myapplication.view.interfaces.myButton
+import com.example.myapplication.view.pages.home.bottomSheet
+import com.example.myapplication.view.pages.playlist.PlayLisFragment
+import com.example.myapplication.view.pages.playlist.bottomSheetVoice
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.viewModel.AudioViewModel
+import com.example.myapplication.viewModel.VoicesViewModel
+import myColor
+import kotlin.math.truncate
 
 class AudioActivity : ComponentActivity() {
     private val viewModelAudio: AudioViewModel by viewModels()
+    private val viewModelVoices: VoicesViewModel by viewModels()
     private var voice: VoicesResponse = VoicesResponse()
     private var playlist: Int = 0
 
@@ -45,6 +55,7 @@ class AudioActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         playlist = intent.getStringExtra("object").toString().toInt()
+        viewModelVoices.get()
 
         setContent {
             JetPackBottomNavigationTheme {
@@ -52,7 +63,7 @@ class AudioActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    audioScreen(LocalContext.current){ p1, p2, p3 ->
+                    audioScreen(viewModelVoices.voicesResponse, LocalContext.current){ p1, p2, p3 ->
                         run {
                             createVoice(p1, p2, p3)
                         }
@@ -79,10 +90,12 @@ class AudioActivity : ComponentActivity() {
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun audioScreen(context: Context, onClick: (String, String, String) -> Unit) {
+fun audioScreen(list: List<VoicesResponse>, context: Context, onClick: (String, String, String) -> Unit) {
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var textVoice by remember { mutableStateOf(TextFieldValue("")) }
+
+    var isClicked: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = { Bars().topBar() },
@@ -97,9 +110,17 @@ fun audioScreen(context: Context, onClick: (String, String, String) -> Unit) {
 //                        color = Color.LightGray, textAlign = TextAlign.Right
 //                    )
                     Row(modifier = Modifier.height(60.dp).padding(top = 20.dp)) {
-                        playerVoice(context)
-                    }
+                        playerVoice(context){ isClicked = true }
 
+                    }
+//                    Row(modifier = Modifier.height(60.dp).padding(top = 60.dp)) {
+//                        Row{
+//                            Column {
+//                                myButton("Selecionar", true, myColor.blue){ isClicked = true }
+//                            }
+//                        }
+//
+//                    }
                     OutlinedTextField(
                         value = name,
                         modifier = Modifier.fillMaxWidth(),
@@ -144,10 +165,19 @@ fun audioScreen(context: Context, onClick: (String, String, String) -> Unit) {
         },
         backgroundColor = colorResource(R.color.white) // Set background color to avoid the white flashing when you switch between screens
     )
+
+    if (isClicked) {
+        val validFileLocal: ValidFileLocal = ValidFileLocal(context, "")
+        bottomSheetVoice(list, context, validFileLocal) { it ->
+            //playlist = it.name
+            //result = it.id
+            isClicked = false
+        }
+    }
 }
 
 @Composable
-fun playerVoice(context: Context){
+fun playerVoice(context: Context, onClick: () -> Unit){
     val item = LocalData(context).getVoice()
     Row(
         modifier = Modifier
@@ -175,5 +205,7 @@ fun playerVoice(context: Context){
                 )
             }
         }
+
     }
+
 }

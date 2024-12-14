@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myapplication.R
 import com.example.myapplication.model.response.PlayListResponse
+import com.example.myapplication.util.DateFormat
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -57,7 +58,7 @@ fun playListItem(item: PlayListResponse, index: Int, selectedIndex: Int, onClick
                         color = Color.Black, textAlign = TextAlign.Center
                     )
                     Text(
-                        text = item.date,
+                        text = DateFormat().getDate(item.date),
                         modifier = Modifier.padding(4.dp),
                         color = Color.LightGray, textAlign = TextAlign.Right
                     )

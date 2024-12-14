@@ -10,6 +10,15 @@ import com.google.gson.Gson
 class LocalData(var context: Context) {
     private val sharedPref: SharedPreferences = context.getSharedPreferences(DATA_DB_USERS_LOCAL, MODE_PRIVATE)
 
+    fun setLoop(value: Boolean){
+        sharedPref.edit().putBoolean(DATA_LOOP_PLAYER_LOCAL, value).commit()
+    }
+
+    fun getLoop(): Boolean{
+        val data = sharedPref.getBoolean(DATA_LOOP_PLAYER_LOCAL, false)
+        return data
+    }
+
     fun set(user: UserResponse){
         val data = Gson().toJson(user)
         sharedPref.edit().putString(DATA_USERS_LOCAL, data).commit()

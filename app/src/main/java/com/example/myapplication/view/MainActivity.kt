@@ -1,14 +1,18 @@
 package com.example.myapplication.view
 
+import myColor
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,11 +41,11 @@ import com.example.myapplication.util.LocalData
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.ButtonNew
 import com.example.myapplication.view.pages.account.HomeAccount
-import com.example.myapplication.view.pages.home.HomePage
+import com.example.myapplication.view.pages.home.*
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.view.theme.NavigationItem
-import com.example.myapplication.view.pages.home.HomeInsertActivity
 import com.example.myapplication.view.pages.login.LoginActivity
+import com.example.myapplication.view.pages.playlist.PlayLisFragment
 import com.example.myapplication.view.pages.playlist.PlayListActivity
 import com.example.myapplication.view.pages.playlist.PlayListDetailsActivity
 import com.example.myapplication.view.pages.playlist.PlaylistHome
@@ -80,10 +84,17 @@ class MainActivity : ComponentActivity() {
         StrictMode.setThreadPolicy(policy)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
+
     override fun onStart() {
         super.onStart()
         if(LocalData(this).valid())
             this.startActivity(Intent(this, LoginActivity::class.java))
+        viewModelPlaylist.get()
+
     }
 
     @Composable
@@ -96,7 +107,7 @@ class MainActivity : ComponentActivity() {
             NavigationItem.Config
         )
         BottomNavigation(
-            backgroundColor = Color(R.color.primary),
+            backgroundColor = myColor.default,
             contentColor = Color.White
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -149,15 +160,24 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomePage().listSchedule(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse, onDelete = { p1 ->
+                BackHandler(true) {}
+                val playActions = HomeSetPlayerList(this@MainActivity, viewModelPlaylist)
+                HomePage().listSchedule(viewModelScheduling.loading, viewModelScheduling.schedulingListResponse,
+                    onClickList = { p1, p2 -> playActions.setPlayerList(p1, p2) },
+                    onDelete = { p1 ->
                     viewModelScheduling.delete(p1)
                     Toast.makeText(this@MainActivity, "Item removido com sucesso!", Toast.LENGTH_SHORT).show()
                     viewModelScheduling.get()
                 })
+
+                homePlayerPlaylist(viewModelPlaylist, playActions) {
+                    viewModelPlaylist.openDialogPlayer = false
+                }
 
                 ButtonNew().actionButton {
                     this@MainActivity.startActivity(Intent(this@MainActivity, HomeInsertActivity::class.java))
@@ -165,17 +185,11 @@ class MainActivity : ComponentActivity() {
             }
 //
             composable(NavigationItem.Playlist.route) {
-                PlaylistHome().list(viewModelPlaylist.loading, viewModelPlaylist.playListResponse){ p1 ->
-                    val it = Intent(this@MainActivity, PlayListDetailsActivity::class.java)
-                    it.putExtra("object", Gson().toJson(p1))
-                    this@MainActivity.startActivity(it)
-                }
-
-                ButtonNew().actionButton {
-                    this@MainActivity.startActivity(Intent(this@MainActivity, PlayListActivity::class.java))
-                }
+                BackHandler(true) {  }
+                PlaylistHome().list(PlayLisFragment(this@MainActivity, viewModelPlaylist, viewModelAudio))
             }
             composable(NavigationItem.Voices.route) {
+                BackHandler(true) {}
                 VoicesHome().List(viewModelVoices.loading, viewModelVoices.voicesResponse, context = this@MainActivity){ p1 ->
 //                    val it = Intent(this@MainActivity, PlayListActivity::class.java)
 //                    it.putExtra("object", Gson().toJson(p1))
@@ -183,6 +197,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(NavigationItem.Config.route) {
+                BackHandler(true) {}
                 HomeAccount().account(LocalContext.current)
             }
         }

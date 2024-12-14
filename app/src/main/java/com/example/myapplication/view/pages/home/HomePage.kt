@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.model.response.SchedulingResponse
 import com.example.myapplication.util.DateFormat
 import com.example.myapplication.view.interfaces.NotItemList
@@ -36,7 +37,7 @@ class HomePage {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
     @SuppressLint("NotConstructor", "ResourceAsColor")
     @Composable
-    fun listSchedule(loading: Boolean, movieList: List<SchedulingResponse>, onDelete: (Int) -> Unit) {
+    fun listSchedule(loading: Boolean, movieList: List<SchedulingResponse>, onClickList: (Int, PlayListResponse) -> Unit, onDelete: (Int) -> Unit) {
 
         if (loading)
             loadingPage("Carregando Agendas")
@@ -136,6 +137,7 @@ class HomePage {
                         itemsIndexed(items = movieList) { index, item ->
                             homeListItem(item = item, index, selectedIndex, onClick = { i ->
                                 selectedIndex = i
+                                onClickList(index, movieList[i].playList)
                             }, onDelete = { id ->
                                 onDelete(id)
                             })

@@ -50,8 +50,9 @@ class PlayListDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val informant = intent.getStringExtra("object")
+        val actions = PlayLisFragment(this@PlayListDetailsActivity, viewModel, viewModelAudio)
 
+        val informant = intent.getStringExtra("object")
         if (!informant.isNullOrBlank())
             viewModel.playResponse = Gson().fromJson(informant, PlayListResponse::class.java)
 
@@ -61,7 +62,9 @@ class PlayListDetailsActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    page()
+                    PlaylistDetailsPage(actions).page()
+
+
                     ButtonNew().actionButton {
                         if(LocalData(this@PlayListDetailsActivity).getVoice().id == "")
                             Toast.makeText(this@PlayListDetailsActivity, "Para cadastrar Audios, você precisa selecionar a Voz Default", Toast.LENGTH_SHORT).show()
@@ -76,24 +79,7 @@ class PlayListDetailsActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun page(){
-        Scaffold(
-            topBar = { Bars().topBar() },
-            content = { padding ->
-                Box(modifier = Modifier.padding(padding)) {
-                    details(viewModelAudio, this@PlayListDetailsActivity, viewModel.playResponse, {
-                        deleteItem()
-                    }, { id ->
-                        deleteAudio(id)
-                        //viewModel.get(viewModel.playResponse.id)
-                        this@PlayListDetailsActivity.startActivity(Intent(this@PlayListDetailsActivity, MainActivity::class.java))
-                    })
-                }
-            },
-            backgroundColor = colorResource(R.color.primary) // Set background color to avoid the white flashing when you switch between screens
-        )
-    }
+
 
     private fun deleteItem(){
         viewModel.delete(viewModel.playResponse.id)
@@ -123,108 +109,3 @@ class PlayListDetailsActivity : ComponentActivity() {
 }
 
 
-@SuppressLint("ResourceAsColor")
-@Composable
-fun details(viewModel: AudioViewModel, context: Context, obj: PlayListResponse, onDelete: () -> Unit, onDeleteAudio: (Int) -> Unit) {
-    val openDialog = remember { mutableStateOf(false) }
-
-    Scaffold(
-        content = {
-            Box(
-                modifier = Modifier.fillMaxWidth().height(200.dp)
-                    .paint(painterResource(R.drawable.img), contentScale = ContentScale.FillBounds)
-            )
-
-            Column(modifier = Modifier.height(200.dp).padding(15.dp), horizontalAlignment = Alignment.Start) {
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Column(
-                        modifier = Modifier
-                            .weight(0.9f)
-                            .padding(0.dp, 0.dp, 5.dp, 10.dp)
-                    ) {
-                        Text(text = obj.name, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        Text(text = obj.description, color = Color.White)
-                        Text(text = "10/01/2024 10:32", color = Color.White, fontStyle = FontStyle.Italic)
-                    }
-                    Column(
-                        modifier = Modifier
-                            .weight(0.1f)
-                            .padding(0.dp, 0.dp, 5.dp, 10.dp), horizontalAlignment = Alignment.End
-                    ) {
-                        ButtonNew().deleteSmallButton{
-                            openDialog.value = true
-                        }
-                    }
-                }
-
-            }
-            Column(modifier = Modifier.fillMaxSize().padding(0.dp, 150.dp, 0.dp, 0.dp).background(color = Color.White)) {
-                Column(modifier = Modifier.fillMaxSize().padding(15.dp), horizontalAlignment = Alignment.Start) {
-                    if (obj.audios.isEmpty())
-                        NotItemList().listClean()
-                    else {
-                        listItensDetails(viewModel, obj.audios, ValidFileLocal(context, ""), onDeleteAudio)
-                    }
-                }
-            }
-
-        },
-        backgroundColor = colorResource(R.color.white)
-    )
-
-    Alert().confirmation(
-        "Atenção",
-        "Tem certeza que quer remover o item, todos os audios do playlist será removido ?",
-        openDialog,
-        onConfirmation = {
-            onDelete()
-            openDialog.value = false
-        },
-        onCancel = { openDialog.value = false })
-}
-
-@Composable
-fun listItensDetails(viewModel: AudioViewModel, itemListResponse: List<AudioResponse>, validFileLocal: ValidFileLocal, onDelete: (Int) -> Unit){
-    Box {
-        Spacer(modifier = Modifier.width(5.dp))
-        var selectedIndex: Int by remember { mutableStateOf(-1) }
-        var download: Boolean by remember { mutableStateOf(false) }
-
-
-        LazyColumn {
-            itemsIndexed(items = itemListResponse) { index, item ->
-                audioListItem(
-                    item = item,
-                    index,
-                    selectedIndex,
-                    download,
-                    {
-                        selectedIndex = -1
-                        validFileLocal.getMediaStop()
-                        null
-                    }, { p1, p2 ->
-                        if (selectedIndex == p2) {
-                            validFileLocal.getMediaStop()
-                            selectedIndex = -1
-                        } else {
-                            download = true
-                            validFileLocal.name = p1
-                            selectedIndex = p2
-
-                            if(!validFileLocal.existItem()) {
-                                viewModel.downloadFilePage(p1, validFileLocal)
-                            }
-                            download = false
-                            validFileLocal.getMedia()
-                            validFileLocal.mMedia?.start()
-                            validFileLocal.mMedia?.setOnCompletionListener {
-                                selectedIndex = -1
-                            }
-                        }
-                    }, onDelete)
-
-            }
-        }
-    }
-}

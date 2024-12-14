@@ -1,5 +1,6 @@
 package com.example.myapplication.view.pages.playlist
 
+import myColor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -16,7 +17,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
@@ -24,7 +24,6 @@ import com.example.myapplication.model.request.PlayListRequest
 import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
-import com.example.myapplication.view.interfaces.PhotoPicker
 import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.myButton
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
@@ -55,9 +54,10 @@ class PlayListActivity : ComponentActivity() {
             topBar = { Bars().topBar() },
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
-                    playListScreen(this@PlayListActivity, obj) { p1: String, p2: String, p3: String, p4:Boolean ->
-                        saveData(p1, p2)
-                    }
+                    playListScreen(obj,
+                        { p1: String, p2: String, p3: String, p4:Boolean ->
+                            saveData(p1, p2)
+                        },{ onBackPressed() })
                 }
             },
             backgroundColor = colorResource(R.color.primary)
@@ -68,6 +68,7 @@ class PlayListActivity : ComponentActivity() {
 
         Toast.makeText(this, "Cadastro efetuado com sucesso", Toast.LENGTH_LONG).show()
         this.startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }
 
@@ -75,7 +76,7 @@ class PlayListActivity : ComponentActivity() {
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit) {
+fun playListScreen(obj: PlayListResponse, clickListener: (String, String, String, Boolean) -> Unit, onBackCancel: () -> Unit) {
     var title by remember { mutableStateOf(obj.name) }
     var description by remember { mutableStateOf(obj.description) }
     var image by remember { mutableStateOf(obj.image) }
@@ -123,8 +124,8 @@ fun playListScreen(context: Context, obj: PlayListResponse, clickListener: (Stri
                                 .weight(1f)
                                 .padding(0.dp)
                         ) {
-                            myButton("Deletar", true, color = Color.Gray, onClick = {
-                                clickListener(title, description, "image", true)
+                            myButton("Cancelar", true, color = myColor.orange, onClick = {
+                                onBackCancel()
                             })
                         }
                     }

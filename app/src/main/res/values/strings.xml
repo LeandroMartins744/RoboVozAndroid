@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vox Maestro</string>
+    <string name="app_name">Robo Voz</string>
     <string name="default_notification_channel_id">ID</string>
     <string name="default_notification_channel_name">NAME</string>
 </resources>

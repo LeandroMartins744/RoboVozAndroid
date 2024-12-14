@@ -22,6 +22,7 @@ class LoginActivity : ComponentActivity() {
 
         setContent{
             MyLoginApplicationTheme {
+
                 loginForm.form(viewModel, { p1: String, p2: String ->
                     execute(p1, p2)
                 }, {

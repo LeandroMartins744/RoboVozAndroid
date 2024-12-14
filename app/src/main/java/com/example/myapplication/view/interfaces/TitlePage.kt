@@ -18,7 +18,7 @@ import com.example.myapplication.R
 class TitlePage {
     @SuppressLint("ResourceAsColor")
     @Composable
-    fun setTitle(title: String, subTitle: String = "Vox Maestro"){
+    fun setTitle(title: String, subTitle: String = R.string.app_name.toString()){
         Row {
             Text(
                 text = title,

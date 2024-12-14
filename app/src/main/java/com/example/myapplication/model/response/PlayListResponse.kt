@@ -1,6 +1,8 @@
 package com.example.myapplication.model.response
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
+import kotlin.collections.ArrayList
 
 data class PlayListResponse (
     @SerializedName("id")
@@ -14,9 +16,9 @@ data class PlayListResponse (
     @SerializedName("image")
     val image: String,
     @SerializedName("date")
-    var date: String,
+    var date: Date,
     @SerializedName("active")
     val active: Boolean
 ){
-    constructor(): this(0, ArrayList<AudioResponse>(), "", "", "", "", false)
+    constructor(): this(0, ArrayList<AudioResponse>(), "", "", "", Date(), false)
 }

@@ -22,7 +22,6 @@ class DateFormat {
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFormatUS(date: Date): String{
-
         return SimpleDateFormat("yyyy-MM-dd hh:mm").format(date).replace(" ", "T")
     }
 

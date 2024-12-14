@@ -1,5 +1,6 @@
 package com.example.myapplication.view.pages.playlist
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,17 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.example.myapplication.view.interfaces.ButtonNew
+import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.view.interfaces.NotItemList
 import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.loadingPage
 
 
-class PlaylistHome {
+class PlaylistHome_old {
+    @SuppressLint("NotConstructor")
     @Composable
-    fun list(action: PlayLisFragment) {
-        if (action.getLoading())
-            loadingPage(action.getLoadingText())
+    fun list(loading: Boolean, movieList: List<PlayListResponse>, onClick: (PlayListResponse) -> Unit) {
+
+        if (loading)
+            loadingPage("Carregando PlayList")
         else {
             Column(
                 modifier = Modifier
@@ -29,28 +32,26 @@ class PlaylistHome {
                     .wrapContentSize(Alignment.TopStart)
                     .padding(20.dp)
             ) {
-                TitlePage().setTitle(action.getTitle())
+                TitlePage().setTitle("PlayList's")
 
-                if (action.getList().isEmpty())
+                if (movieList.isEmpty())
                     NotItemList().listClean()
                 else {
                     var selectedIndex by remember { mutableStateOf(-1) }
                     LazyColumn {
-                        itemsIndexed(items = action.getList()) { index, item ->
+                        itemsIndexed(items = movieList) { index, item ->
                             playListItem(
                                 item = item,
                                 index,
                                 selectedIndex
                             ) { i ->
                                 selectedIndex = i
-                                action.onClick(item)
+                                onClick(item)
                             }
                         }
                     }
                 }
             }
         }
-
-        ButtonNew().actionButton { action.onClickNew() }
     }
 }
