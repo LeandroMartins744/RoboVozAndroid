@@ -37,7 +37,7 @@ class LoginForm {
 
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(R.drawable.background),
+                painter = painterResource(R.drawable.back),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
@@ -51,7 +51,7 @@ class LoginForm {
                     .padding(horizontal = 30.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo),
+                    painter = painterResource(id = R.drawable.robovoz_logo),
                     modifier = Modifier.height(120.dp),
                     contentDescription = ""
                 )
@@ -77,8 +77,10 @@ class LoginForm {
                         viewModel.setValue()
                               },
                     enabled = true,
+                    //colors = myColor.button,
+                    colors = ButtonDefaults.buttonColors(containerColor = myColor.button),
                     shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().height(50.dp)
                 ) {
                     Text(viewModel.textCampo)
                 }
@@ -91,7 +93,7 @@ class LoginForm {
                     enabled = true,
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = myColor.orange),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().height(50.dp)
                 ) {
                     Text("Cadastrar-se")
                 }

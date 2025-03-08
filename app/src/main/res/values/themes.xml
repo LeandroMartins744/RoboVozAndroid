@@ -2,9 +2,15 @@
 <resources>
     <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar"/>
 
-    <style name="Theme.SplashScreen.MySplash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#06043D</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>
+    <!--    <style name="Theme.SplashScreen.MySplash" parent="Theme.SplashScreen">-->
+    <!--        <item name="windowSplashScreenBackground">#06043D</item>-->
+    <!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>-->
+    <!--        <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>-->
+    <!--    </style>-->
+
+    <style name="Theme.AnimatedSplashScreen" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
+
 </resources>
