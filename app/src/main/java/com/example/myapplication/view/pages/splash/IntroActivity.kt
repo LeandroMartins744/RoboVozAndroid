@@ -56,23 +56,14 @@ fun splashSH(){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ){
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
-            val logoAnimationState =
-                animateLottieCompositionAsState(composition = composition)
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
 
             LottieAnimation(
-                modifier = Modifier.padding(top = 100.dp).height(250.dp),
+                modifier = Modifier.padding(top = 100.dp).height(150.dp),
 
                 composition = composition,
                 iterations = LottieConstants.IterateForever
-                //progress = { logoAnimationState.progress }
             )
         }
-
-//        Image(
-//            painter = painterResource(id = R.drawable.logo),
-//            contentDescription = null,
-//            modifier = Modifier.align(Alignment.Center).size(350.dp)
-//        )
     }
 }
