@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -29,6 +30,18 @@ class DateFormat {
         val formatter = SimpleDateFormat(pattern, Locale.getDefault())
         return formatter.format(Date())
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDateString(date: String, pattern: String = "yyyy-MM-dd HH:mm:ss"): String {
+        try {
+            val dateConvert = LocalDateTime.parse(date.replace(".000+00:00", ""))
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            return dateConvert.format(formatter)
+        }catch (ex: Exception){
+            return ""
+        }
+    }
+
     fun getDate(date: Date, pattern: String = "dd/MM/yyyy hh:mm"): String {
         val formatter = SimpleDateFormat(pattern, Locale.US)// .getDefault())
         return formatter.format(date)

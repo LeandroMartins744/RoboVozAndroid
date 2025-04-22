@@ -96,4 +96,7 @@ dependencies {
 
     //Splash
     implementation ("com.airbnb.android:lottie-compose:6.3.0")
+
+    //Loading
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
 }

@@ -24,11 +24,20 @@ class PhoneVisualTransformation(): VisualTransformation {
 
     object PhoneOffSetMapping: OffsetMapping{
         override fun originalToTransformed(offset: Int): Int {
-            return when{
-                offset > 6 -> offset + 4
-                offset > 1 -> offset + 3
-                offset > 0 -> offset + 1
-                else -> offset
+            try {
+                if(offset > 0) {
+                    val x = 0
+                }
+                var xpto = when {
+                    offset > 6 -> offset + 4
+                    offset > 1 -> offset + 3
+                    offset > 0 -> offset + 1
+                    else -> offset
+                }
+                return xpto
+            }catch (ex: Exception)
+            {
+                return offset
             }
         }
 

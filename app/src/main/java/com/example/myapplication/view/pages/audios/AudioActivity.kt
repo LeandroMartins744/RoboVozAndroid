@@ -36,9 +36,11 @@ import com.example.myapplication.view.MainActivity
 import com.example.myapplication.view.interfaces.Bars
 import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.myButton
+import com.example.myapplication.view.interfaces.myField
 import com.example.myapplication.view.pages.home.bottomSheet
 import com.example.myapplication.view.pages.playlist.PlayLisFragment
 import com.example.myapplication.view.pages.playlist.bottomSheetVoice
+import com.example.myapplication.view.pages.voices.voicesBottomSheet
 import com.example.myapplication.view.theme.JetPackBottomNavigationTheme
 import com.example.myapplication.viewModel.AudioViewModel
 import com.example.myapplication.viewModel.VoicesViewModel
@@ -63,9 +65,9 @@ class AudioActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    audioScreen(viewModelVoices.voicesResponse, LocalContext.current){ p1, p2, p3 ->
+                    audioScreen(viewModelVoices.voicesResponse, LocalContext.current){ it ->
                         run {
-                            createVoice(p1, p2, p3)
+                            createVoice(it.name, it.description, it.textVoice)
                         }
                     }
 
@@ -76,7 +78,8 @@ class AudioActivity : ComponentActivity() {
     }
 
     private fun createVoice(name: String, description: String, text: String){
-        val item = AudioRequest(name, description, text, voice.id)
+        val newText = text.replace("\n", " ").replace("\t", " ").replace("\r", " ")
+        val item = AudioRequest(name, description, newText, voice.id)
         item.playlist = playlist
         viewModelAudio.post(item)
         Toast.makeText(this@AudioActivity, "Ação efetuada com sucesso", Toast.LENGTH_LONG).show()
@@ -90,11 +93,8 @@ class AudioActivity : ComponentActivity() {
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun audioScreen(list: List<VoicesResponse>, context: Context, onClick: (String, String, String) -> Unit) {
-    var name by remember { mutableStateOf(TextFieldValue("")) }
-    var description by remember { mutableStateOf(TextFieldValue("")) }
-    var textVoice by remember { mutableStateOf(TextFieldValue("")) }
-
+fun audioScreen(list: List<VoicesResponse>, context: Context, onClick: (VoiceItem) -> Unit) {
+    var audio by remember { mutableStateOf(VoiceItem()) }
     var isClicked: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -103,82 +103,66 @@ fun audioScreen(list: List<VoicesResponse>, context: Context, onClick: (String, 
             Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
 
                 Column{
-                    TitlePage().setTitle("Criação de Audio")
-//                    Text(
-//                        text = "Criado em: 08/10/2025 10:35",
-//                        modifier = Modifier.fillMaxWidth(),
-//                        color = Color.LightGray, textAlign = TextAlign.Right
-//                    )
-                    Row(modifier = Modifier.height(60.dp).padding(top = 20.dp)) {
-                        playerVoice(context){ isClicked = true }
+                    TitlePage().setTitle("Criação de Audio", "novo áudio")
 
+                    Row(modifier = Modifier.height(100.dp).padding(top = 20.dp)) {
+                        playerVoice(context, list){ isClicked = true }
                     }
-//                    Row(modifier = Modifier.height(60.dp).padding(top = 60.dp)) {
-//                        Row{
-//                            Column {
-//                                myButton("Selecionar", true, myColor.blue){ isClicked = true }
-//                            }
-//                        }
-//
-//                    }
-                    OutlinedTextField(
-                        value = name,
+
+                    myField(
+                        value = audio.name,
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(text = "Digite o Nome do Audio") },
-                        onValueChange = {
-                            name = it
-                        }
+                        label = "Digite o Nome do Audio",
+                        onChange = { data -> audio = audio.copy(name = data) }
                     )
 
-                    OutlinedTextField(
-                        value = description,
+                    myField(
+                        value = audio.description,
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(text = "Digite a Descrição do Audio") },
-                        onValueChange = {
-                            description = it
-                        }
+                        label = "Digite a Descrição do Audioo",
+                        onChange = { data -> audio = audio.copy(description = data) }
                     )
 
-                    OutlinedTextField(
-                        value = textVoice,
+                    myField(
+                        value = audio.textVoice,
                         modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
-                        label = { Text(text = "Digite o texto para conversão") },
-                        onValueChange = {
-                            textVoice = it
-                        }
+                        label = "Digite o texto para conversão",
+                        maxLine = 10,
+                        onChange = { data -> audio = audio.copy(textVoice = data) }
                     )
-                    Button(
-                        onClick = {
-                            onClick(name.text, description.text, textVoice.text)
-                        },
-                        modifier = Modifier
-                            .size(180.dp, 60.dp)
-                            .padding(10.dp)
-                            .background(color = Color(R.color.primary))
-                            .align(alignment = Alignment.End),
-                        contentPadding = PaddingValues(1.dp)
-                    ) {
-                        Text(text = "Salvar")
-                    }
+
+                    myButton("Salvar", onClick = { onClick(audio) })
                 }
             }
         },
-        backgroundColor = colorResource(R.color.white) // Set background color to avoid the white flashing when you switch between screens
+        backgroundColor = colorResource(R.color.white)
     )
 
     if (isClicked) {
-        val validFileLocal: ValidFileLocal = ValidFileLocal(context, "")
-        bottomSheetVoice(list, context, validFileLocal) { it ->
-            //playlist = it.name
-            //result = it.id
+        val validFileLocal = ValidFileLocal(context, "")
+        bottomSheetVoice(list, context, validFileLocal) {
             isClicked = false
         }
     }
 }
 
+data class VoiceItem(
+    var name: String,
+    var description: String,
+    var textVoice: String,
+){
+    constructor(): this(
+        name = "",
+        description = "",
+        textVoice = "",
+    )
+}
+
 @Composable
-fun playerVoice(context: Context, onClick: () -> Unit){
+fun playerVoice(context: Context, list: List<VoicesResponse>, onClick: () -> Unit){
     val item = LocalData(context).getVoice()
+    var isClicked by rememberSaveable { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .padding(8.dp)
@@ -186,26 +170,34 @@ fun playerVoice(context: Context, onClick: () -> Unit){
     ) {
         Spacer(modifier = Modifier.width(5.dp))
 
-        IconButton(onClick = { MediaPlayer.create(context, Uri.parse(item.preview_url)).start() }) {
+        IconButton(modifier = Modifier.padding(top = 10.dp), onClick = { MediaPlayer.create(context, Uri.parse(item.preview_url)).start() }) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_play_circle_outline_24),
                 contentDescription = "",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(40.dp)
             )
         }
-        Column {
 
+        Column {
             Row(
                 Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
-                androidx.compose.material.Text(
+                Text(
+                    modifier = Modifier.width(150.dp),
                     text = item.name,
-                    color = Color.Black, textAlign = TextAlign.Center
+                    color = Color.Black, textAlign = TextAlign.Start
                 )
+                myButton("Trocar Audio",true, onClick = { isClicked = true })
             }
         }
-
+    }
+    if (isClicked) {
+        voicesBottomSheet(list) { it ->
+            //playlist = it.name
+            //result = it.id
+            isClicked = false
+        }
     }
 
 }

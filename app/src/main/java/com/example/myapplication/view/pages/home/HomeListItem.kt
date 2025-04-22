@@ -8,6 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,15 +35,9 @@ fun homeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, onCli
     val openDialog = remember { mutableStateOf(false) }
 
     androidx.compose.material.Card(
-        onClick = { onClick(index)
-//            Toast.makeText(
-//                context,
-//                courseList[index].languageName + " selected..",
-//                Toast.LENGTH_SHORT
-//            ).show()
-        },
-        modifier = Modifier.padding(8.dp),
-        elevation = 6.dp
+        onClick = { onClick(index) },
+        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+        elevation = 0.dp
     )
     {
         Surface(color = backgroundColor) {
@@ -60,7 +55,6 @@ fun homeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, onCli
                 )
 
                 Spacer(modifier = Modifier.width(5.dp))
-
 
                 Column(modifier = Modifier.fillMaxWidth().weight(0.9f)) {
                     Text(
@@ -90,6 +84,9 @@ fun homeListItem(item: SchedulingResponse, index: Int, selectedIndex: Int, onCli
                         openDialog.value = true
                     }
                 }
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                HorizontalDivider(thickness = 0.5.dp)
             }
         }
 

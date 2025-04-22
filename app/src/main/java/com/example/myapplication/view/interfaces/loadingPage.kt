@@ -15,25 +15,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.example.myapplication.util.ShimmerOnChildren
+import com.example.myapplication.util.ShimmerOnParent
 
 @SuppressLint("ResourceAsColor")
 @Composable
 fun loadingPage(title: String = "Carregando ....") {
-    Row(
+    Column (
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.white))
             .wrapContentSize(Alignment.TopStart)
             .padding(20.dp)
     ) {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            color = Color(R.color.primary),
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth(.7f),
-            fontSize = 32.sp
-        )
+//        Text(
+//            text = title,
+//            fontWeight = FontWeight.Bold,
+//            fontStyle = FontStyle.Italic,
+//            color = Color(R.color.primary),
+//            textAlign = TextAlign.Start,
+//            modifier = Modifier.fillMaxWidth(.7f),
+//            fontSize = 32.sp
+//        )
+            for (i in 0..8) {
+                ShimmerOnParent()
+//            ShimmerOnChildren()
+//            ShimmerOnChildren()
+//            ShimmerOnChildren()
+//            ShimmerOnChildren()
+            }
+
     }
 }

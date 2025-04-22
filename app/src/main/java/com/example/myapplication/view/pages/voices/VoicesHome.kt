@@ -22,6 +22,7 @@ import com.example.myapplication.model.response.VoicesResponse
 import com.example.myapplication.util.LocalData
 import com.example.myapplication.util.VoicesCloud
 import com.example.myapplication.view.interfaces.NotItemList
+import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.loadingPage
 
 
@@ -41,26 +42,8 @@ class VoicesHome {
                     .padding(20.dp)
             ) {
 
-                Row {
-                    Text(
-                        text = "Voze's",
-                        fontWeight = FontWeight.Bold,
-                        fontStyle = FontStyle.Italic,
-                        color = Color(R.color.primary),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(.7f),
-                        fontSize = 32.sp
-                    )
-                    Text(
-                        text = "Vox Maestro",
-                        fontWeight = FontWeight.Thin,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.Black,
-                        textAlign = TextAlign.Right,
-                        modifier = Modifier.padding(0.dp, 15.dp),
-                        fontSize = 16.sp
-                    )
-                }
+                TitlePage().setTitle("Vozes", "selecionar voz")
+
                 Spacer(modifier = Modifier.width(5.dp))
 
                 if(movieList.isNotEmpty()) {

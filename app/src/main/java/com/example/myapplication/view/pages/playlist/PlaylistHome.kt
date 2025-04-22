@@ -29,7 +29,7 @@ class PlaylistHome {
                     .wrapContentSize(Alignment.TopStart)
                     .padding(20.dp)
             ) {
-                TitlePage().setTitle(action.getTitle())
+                TitlePage().setTitle(action.getTitle(), "")
 
                 if (action.getList().isEmpty())
                     NotItemList().listClean()

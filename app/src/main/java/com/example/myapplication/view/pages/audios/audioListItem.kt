@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.response.AudioResponse
+import com.example.myapplication.util.DateFormat
 import com.example.myapplication.util.ValidFileLocal
 import com.example.myapplication.view.interfaces.Alert
 import com.example.myapplication.view.interfaces.ButtonNew
@@ -36,11 +38,9 @@ fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, download:
     val openDialog = remember { mutableStateOf(false) }
 
     Card(
-        onClick = {
-            onClick(index)
-        },
-        modifier = Modifier.padding(8.dp),
-        elevation = 6.dp
+        onClick = { onClick(index) },
+        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+        elevation = 0.dp
     )
     {
         Row(
@@ -73,7 +73,7 @@ fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, download:
                     color = Color.Black, textAlign = TextAlign.Center
                 )
                 Text(
-                    text = item.date,
+                    text = DateFormat().getDateString(item.date),
                     modifier = Modifier.padding(4.dp),
                     color = Color.LightGray, textAlign = TextAlign.Right
                 )
@@ -84,7 +84,9 @@ fun audioListItem(item: AudioResponse, index: Int, selectedIndex: Int, download:
                     openDialog.value = true
                 }
             }
-
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            HorizontalDivider(thickness = 0.5.dp)
         }
     }
     Alert().confirmation(

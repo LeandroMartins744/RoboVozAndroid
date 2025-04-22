@@ -25,13 +25,13 @@ class HomeAccount {
     fun account(context: Context) {
         val user: UserResponse = LocalData(context).get()
         val openDialog = remember { mutableStateOf(false) }
-        val isChecked = remember { mutableStateOf(false) }
+        val isChecked = remember { mutableStateOf(LocalData(context).getLoop()) }
 
         Scaffold(
             content = {
                 Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                     Column {
-                        TitlePage().setTitle("Meus Dados")
+                        TitlePage().setTitle("Meus Dados", "minha conta")
 
                         myField(
                             value = user.name,

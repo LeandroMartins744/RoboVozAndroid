@@ -29,7 +29,12 @@ import com.example.myapplication.model.response.PlayListResponse
 import com.example.myapplication.model.response.SchedulingResponse
 import com.example.myapplication.util.DateFormat
 import com.example.myapplication.view.interfaces.NotItemList
+import com.example.myapplication.view.interfaces.TitlePage
 import com.example.myapplication.view.interfaces.loadingPage
+import com.example.myapplication.view.interfaces.myButton
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 class HomePage {
 
@@ -77,26 +82,7 @@ class HomePage {
                     .padding(20.dp)
             ) {
 
-                Row {
-                    Text(
-                        text = "Agendamentos",
-                        fontWeight = FontWeight.Bold,
-                        fontStyle = FontStyle.Italic,
-                        color = Color(R.color.primary),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(.7f),
-                        fontSize = 32.sp
-                    )
-                    Text(
-                        text = "Vox Maestro",
-                        fontWeight = FontWeight.Thin,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.Black,
-                        textAlign = TextAlign.Right,
-                        modifier = Modifier.padding(0.dp, 15.dp),
-                        fontSize = 16.sp
-                    )
-                }
+                TitlePage().setTitle("Agendamentos", "playList agendados")
                 Spacer(modifier = Modifier.width(5.dp))
                 Row(modifier = Modifier.fillMaxWidth().padding(0.dp)) {
                     Text(
@@ -148,3 +134,8 @@ class HomePage {
         }
     }
 }
+
+
+
+
+

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -36,8 +37,8 @@ fun voicesListItem(
         btnEnable = false
     }
     Card(
-        modifier = Modifier.padding(8.dp),
-        elevation = 6.dp
+        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+        elevation = 0.dp
     )
     {
         Row(
@@ -76,6 +77,9 @@ fun voicesListItem(
                     }
                 }
             }
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            HorizontalDivider(thickness = 0.5.dp)
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import myColor
 
 
 class ButtonNew{
@@ -37,8 +38,9 @@ class ButtonNew{
     fun smallButton(onClick: () -> Unit) {
         SmallFloatingActionButton(
             onClick = { onClick() },
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = Color(R.color.button_new)
+            containerColor = myColor.orange,
+            contentColor = myColor.white
+            //contentColor = Color(R.color.button_new)
         ) {
             Icon(Icons.Filled.Add, "Cadastrar novo item")
         }

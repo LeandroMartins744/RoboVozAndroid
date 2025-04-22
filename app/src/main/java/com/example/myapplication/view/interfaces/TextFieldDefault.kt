@@ -74,6 +74,7 @@ fun myField(
     label: String = "",
     placeholder: String = "",
     spacer: Dp = 15.dp,
+    maxLine: Int = 1,
     enable: Boolean = true
 ) {
     val focusManager = LocalFocusManager.current
@@ -90,6 +91,7 @@ fun myField(
         label = { Text(label) },
         singleLine = true,
         enabled = enable,
+        maxLines = maxLine,
         visualTransformation = VisualTransformation.None
     )
 

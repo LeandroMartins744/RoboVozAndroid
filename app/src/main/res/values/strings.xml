@@ -2,5 +2,5 @@
     <string name="app_name">Robo Voz</string>
     <string name="default_notification_channel_id">ID</string>
     <string name="default_notification_channel_name">NAME</string>
-    <string name="title_activity_intro">IntroActivity</string>
+    <string name="title_activity_intro">Robo Voz</string>
 </resources>

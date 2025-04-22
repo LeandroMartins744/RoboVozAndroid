@@ -23,15 +23,12 @@ class ClientForm {
     @Composable
     fun form(viewModel: ClientViewModel, clickListener: (ClientRequest) -> Unit, onBack: () -> Unit) {
         var client by remember { mutableStateOf(ClientRequest()) }
-        client.email = "xpto@testw.vom"
-        client.email = "xpto@testw.vom"
-        client.email = "xpto@testw.vom"
 
         Scaffold(
             content = {
                 Box(modifier = Modifier.padding(10.dp).fillMaxSize()) {
                     Column (Modifier.verticalScroll(rememberScrollState())){
-                        TitlePage().setTitle("Cadastro")
+                        TitlePage().setTitle("Cadastro", "")
 
                         myField(
                             value = client.name,
@@ -51,11 +48,11 @@ class ClientForm {
 
                         Row(modifier = Modifier.fillMaxWidth()) {
                             Column(modifier = Modifier.weight(1f).padding(0.dp, 0.dp, 5.dp, 10.dp)) {
-                                myFieldMask(
+                                myFieldNumber(
                                     value = client.phone,
                                     modifier = Modifier.fillMaxWidth(),
                                     label = "Telefone",
-                                    visualTransformation = PhoneVisualTransformation(),
+                                    //visualTransformation = PhoneVisualTransformation(),
                                     onChange = { data ->
                                         if(data.length < 12)
                                             client = client.copy(phone = data)
@@ -65,12 +62,12 @@ class ClientForm {
                             }
 
                             Column(modifier = Modifier.weight(1f).padding(0.dp, 0.dp, 5.dp, 10.dp)) {
-                                myFieldMask(
+                                myFieldNumber(
                                     value = client.birthDay,
                                     modifier = Modifier.fillMaxWidth(),
                                     placeholder = "dd/MM/yyyy",
                                     label = "Aniversário",
-                                    visualTransformation = DateVisualTransformation(),
+                                    //visualTransformation = DateVisualTransformation(),
                                     onChange = { data ->
                                         if(data.length < 9)
                                             client = client.copy(birthDay = data)
