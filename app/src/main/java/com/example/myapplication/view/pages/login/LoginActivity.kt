@@ -41,13 +41,19 @@ class LoginActivity : ComponentActivity() {
                 viewModel.setIsButton(true)
                 if(data.isError)
                     Toast.makeText(this, data.messageError, Toast.LENGTH_SHORT).show()
-                if (data.email.isNullOrBlank()) {
+                if (data.email.isBlank()) {
                     Toast.makeText(this, "Login ou senha inválido!", Toast.LENGTH_SHORT).show()
                     viewModel.setValue()
                 }
                 else {
-                     LocalData(this).set(data)
-                     this.startActivity(Intent(this, MainActivity::class.java))
+                    LocalData(this).set(data)
+                    val token = LocalData(this).getTokenFireBase()
+
+                    if (token.token != ""){
+                        token.userId = data.id
+                        viewModel.getNotifyViewModel(token)
+                    }
+                    this.startActivity(Intent(this, MainActivity::class.java))
                 }
             })
         }

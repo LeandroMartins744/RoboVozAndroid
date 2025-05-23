@@ -21,6 +21,15 @@
             android:theme="@style/Theme.MyApplication"
             android:usesCleartextTraffic="true"
             tools:targetApi="31">
+
+        <service
+            android:name=".firebase.NotificationMessageService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
                 android:name=".view.pages.splash.IntroActivity"
                 android:exported="true" android:label="@string/title_activity_intro"

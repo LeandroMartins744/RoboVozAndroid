@@ -6,6 +6,7 @@ import com.example.myapplication.model.response.UserResponse
 import com.example.myapplication.client.AuthTokenService
 import com.example.myapplication.client.RetrofitInitializer
 import com.example.myapplication.client.UsersEndpoints
+import com.example.myapplication.model.request.UserNotifyRequest
 import com.example.myapplication.model.response.UserRequest
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,6 +33,19 @@ class UserRepository {
                     userData.value?.isError = true
                     userData.value?.messageError = "Erro ao carregar dados"
                     userData.value?.throwable = response
+                }
+            })
+    }
+
+    fun getUserNotify(user: UserNotifyRequest){
+        userCall.getUserNotify(AuthTokenService().getAuthToken(), user)
+            .enqueue(object: Callback<UserNotifyRequest>{
+                override fun onResponse(call: Call<UserNotifyRequest>, response: Response<UserNotifyRequest>) {
+                    Log.d("TAG", "onResponse response:: $response")
+                }
+
+                override fun onFailure(call: Call<UserNotifyRequest>, response: Throwable) {
+                    Log.d("TAG ERROS", "onResponse response:: $response")
                 }
             })
     }

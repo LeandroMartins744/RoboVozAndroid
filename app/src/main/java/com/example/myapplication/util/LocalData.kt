@@ -3,6 +3,7 @@ package com.example.myapplication.util
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.myapplication.model.request.UserNotifyRequest
 import com.example.myapplication.model.response.UserResponse
 import com.example.myapplication.model.response.VoicesResponse
 import com.google.gson.Gson
@@ -11,7 +12,7 @@ class LocalData(var context: Context) {
     private val sharedPref: SharedPreferences = context.getSharedPreferences(DATA_DB_USERS_LOCAL, MODE_PRIVATE)
 
     fun setLoop(value: Boolean){
-        sharedPref.edit().putBoolean(DATA_LOOP_PLAYER_LOCAL, value).commit()
+        sharedPref.edit().putBoolean(DATA_LOOP_PLAYER_LOCAL, value).apply()
     }
 
     fun getLoop(): Boolean{
@@ -21,7 +22,7 @@ class LocalData(var context: Context) {
 
     fun set(user: UserResponse){
         val data = Gson().toJson(user)
-        sharedPref.edit().putString(DATA_USERS_LOCAL, data).commit()
+        sharedPref.edit().putString(DATA_USERS_LOCAL, data).apply()
     }
 
     fun get(): UserResponse{
@@ -36,11 +37,21 @@ class LocalData(var context: Context) {
 
     fun setVoice(obj: VoicesResponse){
         val data = Gson().toJson(obj)
-        sharedPref.edit().putString(DATA_VOICE_DEFAULT, data).commit()
+        sharedPref.edit().putString(DATA_VOICE_DEFAULT, data).apply()
+    }
+
+    fun setTokenFireBase(obj: UserNotifyRequest){
+        val data = Gson().toJson(obj)
+        sharedPref.edit().putString(DATA_USERS_TOKEN_FIREBASE, data).apply()
+    }
+
+    fun getTokenFireBase(): UserNotifyRequest{
+        val data = sharedPref.getString(DATA_USERS_TOKEN_FIREBASE, null) ?: return UserNotifyRequest(0, "")
+        return Gson().fromJson(data, UserNotifyRequest::class.java)
     }
 
     fun clean(){
-        sharedPref.edit().clear().commit()
+        sharedPref.edit().clear().apply()
     }
 
     fun valid(): Boolean {

@@ -3,4 +3,7 @@
     <string name="default_notification_channel_id">ID</string>
     <string name="default_notification_channel_name">NAME</string>
     <string name="title_activity_intro">Robo Voz</string>
+    <string name="channel_id">robovozchannel</string>
+    <string name="channel_name">Robo Voz</string>
+    <string name="channel_desc">Descrição do canal</string>
 </resources>

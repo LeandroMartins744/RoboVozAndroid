@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -99,4 +100,8 @@ dependencies {
 
     //Loading
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

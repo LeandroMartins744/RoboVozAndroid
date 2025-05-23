@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
+import com.example.myapplication.model.request.UserNotifyRequest
 import com.example.myapplication.model.response.UserRequest
 import com.example.myapplication.model.response.UserResponse
 import com.example.myapplication.viewModel.repositories.UserRepository
@@ -30,5 +31,9 @@ class UsersViewModel() : ViewModel() {
 
     fun getUsersViewModel(user: String, pass: String) {
         repository.getUser(UserRequest(user, pass), userData)
+    }
+
+    fun getNotifyViewModel(obj: UserNotifyRequest) {
+        repository.getUserNotify(obj)
     }
 }
