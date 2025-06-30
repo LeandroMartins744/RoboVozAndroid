@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:739695607419:android:3a7aefb162c700f4892cde",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "br.com.systechbrasil.robovoz"
         }
       },
       "oauth_client": [],
